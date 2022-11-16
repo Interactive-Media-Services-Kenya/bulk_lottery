@@ -48,15 +48,17 @@
                                         </div>
                                         <div class="col-md-6 col-12">
                                             <label for="first-name-column">Quantity</label>
-                                            <input type="number" class="form-control"
-                                                name="quantity"placeholder="100">
+                                            <input type="number" id="quantity" class="form-control"
+                                                name="quantity"placeholder="100" value="">
                                             @error('quantity')
                                                 <p class="text-danger">{{ $message }}</p>
                                             @enderror
                                         </div>
                                         <div class="col-md-6 col-12">
                                             <label for="first-name-column">Amount</label>
-                                            <input type="number" class="form-control" name="amount"placeholder="10.00">
+                                            <input type="number" class="amount form-control"
+                                                name="amount"placeholder="10.00" id="readonlyInput" readonly="readonly" data-bs-toggle="tooltip"
+                                                data-bs-placement="bottom" title="Amount Varies Based on Quantity">
                                             @error('amount')
                                                 <p class="text-danger">{{ $message }}</p>
                                             @enderror
@@ -78,5 +80,29 @@
     </div>
 @endsection
 @section('scripts')
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type='text/javascript'>
+        $(document).ready(function() {
+            $('#quantity').on("input", function() {
+                if ($(this).val() != '') {
+                    var quantity = $(this).attr('quantity');
+                    var value = $(this).val();
+                    var _token = $('input[name="_token"]').val();
+                    $.ajax({
+                        url: "{{ url('/') }}/api/amount/" + value,
+                        method: "POST",
+                        data: {
+                            select: quantity,
+                            value: value,
+                            _token: _token,
+                        },
+                        success: function(result) {
+                            $('.amount').val(result);
+                        }
 
+                    })
+                }
+            });
+        });
+    </script>
 @endsection

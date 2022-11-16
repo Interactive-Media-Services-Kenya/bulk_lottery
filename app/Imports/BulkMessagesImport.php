@@ -9,7 +9,6 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use DB;
 use App\Models\SenderName;
 use App\Models\UserBulkAccount;
-use App\Services\BulkMessageService;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
@@ -21,7 +20,7 @@ class BulkMessagesImport implements ToCollection,WithHeadingRow
     protected $sender_id;
     protected $bulkMessageService;
 
-    public function __construct($client_id, $brand_id,$campaign_id,$sender_id,BulkMessageService $bulkMessageService)
+    public function __construct($client_id, $brand_id,$campaign_id,$sender_id,$bulkMessageService)
     {
         $this->client_id = $client_id;
         $this->brand_id = $brand_id;
@@ -55,10 +54,6 @@ class BulkMessagesImport implements ToCollection,WithHeadingRow
         }
         foreach ($rows as $row)
         {
-            $senderName = SenderName::whereid($this->sender_id)->value('short_code');
-            $message = $row['message'];
-            $phoneNumber = $row['phone'];
-            $this->bulkMessageService->sendBulk($senderName,$message,$phoneNumber);
             BulkMessage::create([
                 "message" => $row['message'],
                 "destination" => $row['phone'],
@@ -68,6 +63,10 @@ class BulkMessagesImport implements ToCollection,WithHeadingRow
                 "sender_id" => $this->sender_id??'',
             ]);
             //Insert Data into Messages Outgoing Into smsservices table
+            $senderName = SenderName::whereid($this->sender_id)->value('short_code');
+            $message = $row['message'];
+            $phoneNumber = $row['phone'];
+            $this->bulkMessageService->sendBulk($senderName,$message,$phoneNumber);
             // DB::connection('mysql2')->DB::table('messages_outgoing')->insert([
             //     'destination' => $row['phone'],
             //     'message' => $row['message'],

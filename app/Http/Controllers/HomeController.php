@@ -28,7 +28,6 @@ class HomeController extends Controller
     public function index()
     {
         $dashboardStats = $this->getDashboardStats();
-
         $latestStats = $this->getLatestDashboardStats();
         return view('home',compact('dashboardStats','latestStats'));
     }
@@ -36,7 +35,7 @@ class HomeController extends Controller
     public function getDashboardStats(){
         $transactions = Transaction::count();
         $messages = BulkMessage::count();
-        $uniqueNumbers = collect(BulkMessage::select('destination'))->unique()->count();
+        $uniqueNumbers = collect(BulkMessage::select('destination')->get())->unique()->count();
         $accountBalance = UserBulkAccount::whereclient_id(auth()->user()->client_id)->value('bulk_balance')??0.00;
         $totalTransactions = DB::table('transactions')->whereclient_id(auth()->user()->client_id)->sum('amount');
         $statistics = [

@@ -53,7 +53,7 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Total Transactions</h6>
-                                        <h6 class="font-extrabold mb-0">{{$dashboardStats['totalTransactions']}}</h6>
+                                        <h6 class="font-extrabold mb-0">KES {{$dashboardStats['totalTransactions']}}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -69,7 +69,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                        <h6 class="text-muted font-semibold">Unique Phone Numbers</h6>
+                                        <h6 class="text-muted font-semibold">Phone Numbers</h6>
                                         <h6 class="font-extrabold mb-0">{{$dashboardStats['uniqueNumbers']}}</h6>
                                     </div>
                                 </div>
@@ -177,7 +177,7 @@
                                                         </div>
                                                     </td>
                                                     <td class="col-auto">
-                                                        <p class=" mb-0">{{$transaction->amount}}</p>
+                                                        <p class=" mb-0">KES {{$transaction->amount}}</p>
                                                     </td>
                                                     <td class="col-auto">
                                                         <p class=" mb-0">{{$transaction->created_at}}</p>

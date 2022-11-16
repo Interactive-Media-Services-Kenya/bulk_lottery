@@ -57,8 +57,8 @@ class BulkMessageController extends Controller
             Excel::import(new BulkMessagesImport($request->client_id,$request->brand_id,$request->campaign_id,$request->sender_id,$this->bulkMessageService), $request->file);
             return redirect()->route('messages.index');
         } catch (\Throwable $th) {
-           // return back()->with('error','Messages Not Imported Successfully. Please Check on the Excel Data Imported');
-            return back()->with('error',$th->getMessage());
+            return back()->with('error','Messages Not Imported Successfully. Please Check on the Excel Data Imported');
+            ///return back()->with('error',$th->getMessage());
 
         }
     }

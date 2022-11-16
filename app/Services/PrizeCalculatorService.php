@@ -20,6 +20,5 @@ class PrizeCalculatorService
         }else{
             return $quantity * 0.65;
         }
-
     }
 }
