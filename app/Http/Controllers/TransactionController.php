@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\PrizeCalculatorService;
 use DB;
 use App\Models\User;
+use App\Models\TransactionCustomer;
 
 class TransactionController extends Controller
 {
@@ -174,5 +175,35 @@ class TransactionController extends Controller
             }else{
                 return exit;
             }
+    }
+
+    public function callbackCustomers(Request $request){
+        logger('Endpoint Hit');
+        $stkCallbackResponse = $request->getContent();
+        $data = json_decode($stkCallbackResponse);
+
+        $user = $_GET['user'];
+        $quantity = $_GET['quantity'];
+
+            $result_desc = $data->Body->stkCallback->ResultDesc;
+            $result_code = $data->Body->stkCallback->ResultCode;
+            $merchant_request_id = $data->Body->stkCallback->MerchantRequestID;
+            $checkout_request_id = $data->Body->stkCallback->CheckoutRequestID;
+            $amount = $data->Body->stkCallback->CallbackMetadata->Item[0]->Value;
+            $mpesa_receipt_number = $data->Body->stkCallback->CallbackMetadata->Item[1]->Value;
+            $transaction_date = $data->Body->stkCallback->CallbackMetadata->Item[3]->Value;
+            $phone_number = $data->Body->stkCallback->CallbackMetadata->Item[4]->Value;
+
+            //Save Transaction Data to Database
+            TransactionCustomer::create([
+                'result_desc' => $result_desc,
+                'msisdn' => $phone_number,
+                'transaction_date' => $transaction_date,
+                'reference' => $mpesa_receipt_number,
+                'amount' => $amount,
+                'merchant_request_id' => $merchant_request_id,
+                'result_code' => $result_code,
+                'checkout_request_id' => $checkout_request_id
+            ]);
     }
 }

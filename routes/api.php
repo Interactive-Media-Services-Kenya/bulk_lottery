@@ -20,4 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::post('transactions/callback/43049ffdidd/', [TransactionController::class,'callback'])->name('transactions.callback.43049ffdidd');
+Route::post('transactions/callback/430498943reid3400/', [TransactionController::class,'callbackCustomers'])->name('transactions.callback.430498943reid3400');
 Route::post('amount/{quantity}',[GetApiDataController::class,'getPrize'])->name('get.amount');

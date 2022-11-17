@@ -33,6 +33,24 @@
             </a>
         </li>
 
+        <li class="sidebar-title">User Management</li>
+
+        <li
+            class="sidebar-item  has-sub">
+            <a href="{{route('clients.index')}}" class='sidebar-link'>
+                <i class="bi bi-people"></i>
+                <span>Users</span>
+            </a>
+            <ul class="submenu ">
+                <li class="submenu-item ">
+                    <a href="{{route('users.index')}}">All Users</a>
+                </li>
+                <li class="submenu-item ">
+                    <a href="{{route('users.create')}}">Add Users</a>
+                </li>
+            </ul>
+        </li>
+
         <li class="sidebar-title">Client Management</li>
 
         <li
@@ -56,6 +74,51 @@
                 </li>
             </ul>
         </li>
+
+        <li class="sidebar-title">Contacts Management</li>
+
+        <li
+            class="sidebar-item  has-sub">
+            <a href="{{route('contacts.index')}}" class='sidebar-link'>
+                <i class="bi bi-people-"></i>
+                <span>Contacts</span>
+            </a>
+            <ul class="submenu ">
+                <li class="submenu-item ">
+                    <a href="{{route('phonebooks.index')}}">Phone Book</a>
+                </li>
+                <li class="submenu-item ">
+                    <a href="{{route('contacts.index')}}">All Contacts</a>
+                </li>
+                <li class="submenu-item ">
+                    <a href="{{route('contacts.blacklists.index')}}">Blacklist</a>
+                </li>
+            </ul>
+        </li>
+        <li class="sidebar-title">Bulk SMS Management</li>
+
+        <li
+            class="sidebar-item  has-sub">
+            <a href="{{route('messages.index')}}" class='sidebar-link'>
+                <i class="bi bi-envelope"></i>
+                <span>SMS Service</span>
+            </a>
+            <ul class="submenu ">
+                <li class="submenu-item ">
+                    <a href="{{route('messages.create')}}">Send SMS (Import Excel)</a>
+                </li>
+
+                <li class="submenu-item ">
+                    <a href="{{route('messages.phonebooks.create')}}">Send SMS To PhoneBook</a>
+                </li>
+
+                <li class="submenu-item ">
+                    <a href="{{route('messages.index')}}">All SMS</a>
+                </li>
+            </ul>
+        </li>
+
+
         <li class="sidebar-title">Sender Names Management</li>
 
         <li
@@ -71,23 +134,6 @@
             </ul>
         </li>
 
-        <li class="sidebar-title">Bulk SMS Management</li>
-
-        <li
-            class="sidebar-item  has-sub">
-            <a href="{{route('messages.index')}}" class='sidebar-link'>
-                <i class="bi bi-envelope"></i>
-                <span>SMS Service</span>
-            </a>
-            <ul class="submenu ">
-                <li class="submenu-item ">
-                    <a href="{{route('messages.create')}}">Send SMS (Import Excel)</a>
-                </li>
-                <li class="submenu-item ">
-                    <a href="{{route('messages.index')}}">All SMS</a>
-                </li>
-            </ul>
-        </li>
         <li class="sidebar-title">Transaction Management</li>
 
         <li
