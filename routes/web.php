@@ -48,9 +48,14 @@ Route::group(['middleware' => ['auth:web','otp']], function () {
     Route::put('users/update/password/{id}', [UserController::class,'updatePassword'])->name('users.update.password');
 });
 
-
-
 Route::group(['middleware' => ['auth:web','otp','user_first_login']], function () {
+    Route::get('client/create',[ClientController::class,'create'])->name('clients.create');
+});
+
+
+
+
+Route::group(['middleware' => ['auth:web','otp','user_first_login','user_has_client']], function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('clients/departments/create',[ClientController::class, 'createDepartment'])->name('clients.departments.create');
     Route::get('clients/departments/index',[ClientController::class, 'departments'])->name('clients.departments.index');
@@ -58,7 +63,7 @@ Route::group(['middleware' => ['auth:web','otp','user_first_login']], function (
     Route::put('clients/departments/update/{id}',[ClientController::class, 'updateDepartment'])->name('clients.departments.update');
     Route::delete('clients/departments/delete/{id}',[ClientController::class, 'destroyDepartment'])->name('clients.departments.destroy');
     Route::post('clients/departments/store',[ClientController::class, 'storeDepartment'])->name('clients.departments.store');
-    Route::resource('clients', ClientController::class);
+    Route::resource('clients', ClientController::class)->except(['create']);
     Route::resource('campaigns', CampaignController::class);
     Route::resource('brands', BrandController::class);
     //Data Fetch

@@ -65,5 +65,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'otp' => \App\Http\Middleware\CheckOTP::class,
         'user_first_login'=> \App\Http\Middleware\FirstLogin::class,
+        'user_has_client'=> \App\Http\Middleware\CheckClient::class,
     ];
 }
