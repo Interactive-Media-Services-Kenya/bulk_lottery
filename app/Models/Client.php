@@ -17,4 +17,8 @@ class Client extends Model
     public function brands(){
         return $this->hasMany(Brand::class,'client_id');
     }
+
+    public function departments(){
+        return $this->hasMany(ClientDepartment::class,'client_id');
+    }
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\SenderNameController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\PhoneBookController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\TransactionCustomerController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +40,12 @@ Route::get('otp/reset', [App\Http\Controllers\OTPController::class,'resend'])->n
 
 Route::group(['middleware' => ['auth:web','otp']], function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('clients/departments/create',[ClientController::class, 'createDepartment'])->name('clients.departments.create');
+    Route::get('clients/departments/index',[ClientController::class, 'departments'])->name('clients.departments.index');
+    Route::get('clients/departments/{id}/edit',[ClientController::class, 'editDepartment'])->name('clients.departments.edit');
+    Route::put('clients/departments/update/{id}',[ClientController::class, 'updateDepartment'])->name('clients.departments.update');
+    Route::delete('clients/departments/delete/{id}',[ClientController::class, 'destroyDepartment'])->name('clients.departments.destroy');
+    Route::post('clients/departments/store',[ClientController::class, 'storeDepartment'])->name('clients.departments.store');
     Route::resource('clients', ClientController::class);
     Route::resource('campaigns', CampaignController::class);
     Route::resource('brands', BrandController::class);
@@ -55,11 +62,16 @@ Route::group(['middleware' => ['auth:web','otp']], function () {
     Route::get('export/get-bulk-messages-excel',[BulkMessageController::class, 'export'])->name('export.get-bulk-messages-excel');
     Route::get('messages',[BulkMessageController::class, 'index'])->name('messages.index');
     Route::get('messages/create',[BulkMessageController::class, 'create'])->name('messages.create');
+
+
     //PhoneBook Routes For Sending Messages
     Route::get('messages/phonebook/create',[BulkMessageController::class, 'createPhoneBook'])->name('messages.phonebooks.create');
     Route::post('messages/phonebook/create',[BulkMessageController::class, 'storePhoneBook'])->name('messages.phonebooks.store');
-
-
+    //Quick Send
+    Route::get('messages/message/quicksend/create',[BulkMessageController::class, 'createQuicksend'])->name('messages.message.quicksend');
+    Route::post('messages/message/quicksend/store',[BulkMessageController::class, 'storeQuickSend'])->name('messages.message.quicksend.store');
+    Route::get('messages/phonebook/message/create',[BulkMessageController::class, 'messagePhoneBook'])->name('messages.message.phonebook.create');
+    Route::post('messages/phonebook/message/create',[BulkMessageController::class, 'storeMessagePhoneBook'])->name('messages.message.phonebook.store');
 
     //Sender Names
     Route::get('sendernames',[SenderNameController::class,'index'])->name('sendernames.index');
@@ -75,6 +87,8 @@ Route::group(['middleware' => ['auth:web','otp']], function () {
     Route::get('transactions/create',[TransactionController::class,'create'])->name('transactions.create');
     Route::post('transactions/store',[TransactionController::class,'store'])->name('transactions.store');
 
+    //Customer Transactions
+    Route::get('transactions/customers/index',[TransactionCustomerController::class,'index'])->name('transactions.customers.index');
 
     //Contacts & PhoneBook
     Route::get('contacts/blacklists/index',[ContactController::class,'blacklists'])->name('contacts.blacklists.index');

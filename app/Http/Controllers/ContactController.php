@@ -62,6 +62,7 @@ class ContactController extends Controller
         } else {
             Blacklist::create([
                 'phone' => $request->phone,
+                'client_id' => $this->clientID??null,
             ]);
         }
 

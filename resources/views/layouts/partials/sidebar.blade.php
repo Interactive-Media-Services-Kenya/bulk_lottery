@@ -70,6 +70,9 @@
                     <a href="{{route('brands.index')}}">Brands</a>
                 </li>
                 <li class="submenu-item ">
+                    <a href="{{route('clients.departments.index')}}">Departments</a>
+                </li>
+                <li class="submenu-item ">
                     <a href="{{route('campaigns.index')}}">Campaigns</a>
                 </li>
             </ul>
@@ -107,9 +110,11 @@
                 <li class="submenu-item ">
                     <a href="{{route('messages.create')}}">Send SMS (Import Excel)</a>
                 </li>
-
                 <li class="submenu-item ">
-                    <a href="{{route('messages.phonebooks.create')}}">Send SMS To PhoneBook</a>
+                    <a href="{{route('messages.message.quicksend')}}">Quick Send (SMS)</a>
+                </li>
+                <li class="submenu-item ">
+                    <a href="{{route('messages.message.phonebook.create')}}">Send SMS To PhoneBook</a>
                 </li>
 
                 <li class="submenu-item ">
@@ -148,6 +153,20 @@
                 </li>
                 <li class="submenu-item ">
                     <a href="{{route('transactions.create')}}">Buy Bulk SMS</a>
+                </li>
+            </ul>
+        </li>
+        <li class="sidebar-title">Customers Transactions</li>
+
+        <li
+            class="sidebar-item  has-sub">
+            <a href="{{route('transactions.customers.index')}}" class='sidebar-link'>
+                <i class="bi bi-dollar"></i>
+                <span>Customer Transactions</span>
+            </a>
+            <ul class="submenu ">
+                <li class="submenu-item ">
+                    <a href="{{route('transactions.customers.index')}}">Customers Transactions</a>
                 </li>
             </ul>
         </li>

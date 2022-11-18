@@ -180,6 +180,7 @@ class TransactionController extends Controller
     public function callbackCustomers(Request $request){
         logger('Endpoint Hit');
         $stkCallbackResponse = $request->getContent();
+        info($stkCallbackResponse);
         $data = json_decode($stkCallbackResponse);
 
         $user = $_GET['user'];

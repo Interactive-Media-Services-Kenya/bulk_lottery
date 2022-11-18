@@ -13,47 +13,25 @@ class SendRegistration extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $details;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($details)
     {
-        //
+        $this->details = $details;
     }
 
     /**
-     * Get the message envelope.
+     * Build the message.
      *
-     * @return \Illuminate\Mail\Mailables\Envelope
+     * @return $this
      */
-    public function envelope()
+    public function build()
     {
-        return new Envelope(
-            subject: 'Send Registration',
-        );
-    }
-
-    /**
-     * Get the message content definition.
-     *
-     * @return \Illuminate\Mail\Mailables\Content
-     */
-    public function content()
-    {
-        return new Content(
-            view: 'view.name',
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array
-     */
-    public function attachments()
-    {
-        return [];
+        return $this->subject('Login Details')->markdown('emails.registration.message')
+            ->with('details', $this->details);
     }
 }

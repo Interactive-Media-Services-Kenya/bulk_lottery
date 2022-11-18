@@ -10,14 +10,23 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Services\BulkMessageService;
 use App\Models\Client;
 use App\Models\SenderName;
+use App\Models\PhoneBook;
+use App\Models\UserBulkAccount;
 
 class BulkMessageController extends Controller
 {
     protected $bulkMessageService;
+    public $clientID, $userID;
 
     public function __construct(BulkMessageService $bulkMessageService)
     {
         $this->bulkMessageService = $bulkMessageService;
+        $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            $this->clientID = auth()->user()->client_id;
+            $this->userID = auth()->user()->id;
+            return $next($request);
+        });
     }
     /**
      * Display a listing of the resource.
@@ -38,7 +47,7 @@ class BulkMessageController extends Controller
     public function create()
     {
         $clients = Client::with(['brands'])->get();
-        return view('messages.create',compact('clients'));
+        return view('messages.create', compact('clients'));
     }
 
     /**
@@ -50,14 +59,14 @@ class BulkMessageController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-                                'client_id' =>'required|integer',
+            'client_id' => 'required|integer',
         ]);
         //Pass Client ID and Brand IDs
         try {
-            Excel::import(new BulkMessagesImport($request->client_id,$request->brand_id,$request->campaign_id,$request->sender_id,$this->bulkMessageService), $request->file);
+            Excel::import(new BulkMessagesImport($request->client_id, $request->brand_id, $request->campaign_id, $request->sender_id, $this->bulkMessageService), $request->file);
             return redirect()->route('messages.index');
         } catch (\Throwable $th) {
-            return back()->with('error','Messages Not Imported Successfully. Please Check on the Excel Data Imported');
+            return back()->with('error', 'Messages Not Imported Successfully. Please Check on the Excel Data Imported');
             ///return back()->with('error',$th->getMessage());
 
         }
@@ -113,4 +122,71 @@ class BulkMessageController extends Controller
         return Excel::download(new BulkMessagesExport, 'bulk_messages.xlsx');
     }
 
+
+    //PhoneBook QuickSend Message
+
+    public function messagePhoneBook()
+    {
+        $phonebooks = PhoneBook::whereclient_id($this->clientID)->get();
+        return view('messages.message.create-phonebook', compact('phonebooks'));
+    }
+
+    public function storeMessagePhoneBook(Request $request)
+    {
+        dd($request->phone_numbers);
+    }
+
+    public function createQuicksend()
+    {
+        $senderNames = SenderName::whereclient_id($this->clientID)->get();
+        return view('messages.message.quicksend',compact('senderNames'));
+    }
+
+    public function storeQuickSend(Request $request)
+    {
+        $request->validate([
+            'phone_numbers' => 'required',
+            'message' => 'required',
+        ]);
+
+        //Split string to obtain individual numbers
+        $phoneNumbers = $request->phone_numbers;
+        $phones = collect(explode(',', $phoneNumbers));
+        //Send SMS to each phone number
+        $accountBulkBalance = UserBulkAccount::whereclient_id($this->clientID)->value('bulk_balance');
+
+        if ($phones->count() > $accountBulkBalance) {
+            return back()->with('error','Insufficient Bulk Units! Kindly Topup Your Bulk Balance to Continue');
+        }
+        $senderName = SenderName::whereid($request->sender_id)->value('short_code');
+        $message = filter_var($request->message, FILTER_SANITIZE_STRING);
+        $senderID = $request->sender_id;
+        foreach ($phones as $phone) {
+            BulkMessage::create([
+                "message" => $message,
+                "destination" => $phone,
+                "brand_id" => $request->brand_id ??null,
+                "client_id" => $this->clientID ??null,
+                "campaign_id" => $request->campaign_id ??null,
+                "sender_id" => $senderID ??null,
+            ]);
+
+            $this->bulkMessageService->sendBulk($senderName,$message,$phone);
+            // DB::connection('mysql2')->DB::table('messages_outgoing')->insert([
+            //     'destination' => $row['phone'],
+            //     'message' => $row['message'],
+            //     'proccessed'=> 2,
+            //     'originator' => SenderName::whereid($this->sender_id)->value('sdpserviceid'),
+            // ]);
+
+        }
+        //Update Bulk Balance if successfully imported
+
+        UserBulkAccount::whereclient_id($this->clientID)->update([
+                'bulk_balance' => $accountBulkBalance - $phones->count()
+        ]);
+
+
+        return back()->with('success', 'Messages Sent Check on Delivery Status on Messages Page');
+    }
 }

@@ -9,14 +9,14 @@
     <div class="page-title">
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>All Blacklists</h3>
-                <p class="text-subtitle text-muted">Click on Contact Name to View Entire Details</p>
+                <h3>All Customer Transactions</h3>
+                <p class="text-subtitle text-muted">Click on Transaction Name to View Entire Details</p>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Blacklist</li>
+                        <li class="breadcrumb-item active" aria-current="page">Transactions</li>
                     </ol>
                 </nav>
             </div>
@@ -27,38 +27,30 @@
     <section class="section">
         <div class="card">
             <div class="card-header">
-                Contacts
-                <a href="{{route('contacts.blacklists.create')}}" class="btn btn-primary float-start float-lg-end">Add Blacklist</a>
+                Transactions
+                <a href="{{route('transactions.create')}}" class="btn btn-primary float-start float-lg-end">Purchase Bulk</a>
             </div>
             <div class="card-body">
                 <table class="table" id="table1">
                     <thead>
                         <tr>
-
-                            <th>Phone Number</th>
-                            <th>Date Created</th>
-                            <th>Actions</th>
+                            <th>TransactionID</th>
+                            <th>Phone</th>
+                            <th>Amount</th>
+                            <th>Date</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($contacts as $item)
+                        @forelse ($transactions as $item)
                         <tr>
-                            <td>{{$item->phone}}</td>
+                            <td>{{$item->reference}}</td>
+                            <td>{{$item->msisdn}}</td>
+                            <td>{{$item->amount}}</td>
                             <td>{{$item->created_at}}</td>
-                               <td><a class="btn btn-sm btn-danger" href="{{ route('contacts.blacklists.index') }}"
-                                onclick="
-                                confirm('Are you sure you want to Delete this Blacklist?');
-                                event.preventDefault();
-                                 document.getElementById(
-                                   'delete-form-{{$item->id}}').submit();"><i class="bi-trash"></i></a></td>
-                               <form id="delete-form-{{$item->id}}"
-                                + action="{{route('contacts.blacklists.destroy', $item->id)}}"
-                                method="post">
-                              @csrf @method('DELETE')
-                          </form></tr>
+                        </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="text-center lead">No Contacts Added</td>
+                            <td colspan="4" class="text-center">No Transactions</td>
                         </tr>
                         @endforelse
 
