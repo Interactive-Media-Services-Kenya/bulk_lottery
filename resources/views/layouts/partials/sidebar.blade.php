@@ -83,7 +83,7 @@
         <li
             class="sidebar-item  has-sub">
             <a href="{{route('contacts.index')}}" class='sidebar-link'>
-                <i class="bi bi-people-"></i>
+                <i class="bi bi-phone"></i>
                 <span>Contacts</span>
             </a>
             <ul class="submenu ">
@@ -129,7 +129,7 @@
         <li
             class="sidebar-item  has-sub">
             <a href="{{route('sendernames.index')}}" class='sidebar-link'>
-                <i class="bi bi-envelope"></i>
+                <i class="bi bi-chat"></i>
                 <span>Sender Names</span>
             </a>
             <ul class="submenu ">
@@ -144,7 +144,7 @@
         <li
             class="sidebar-item  has-sub">
             <a href="{{route('transactions.index')}}" class='sidebar-link'>
-                <i class="bi bi-envelope"></i>
+                <i class="bi bi-wallet"></i>
                 <span>All Transactions</span>
             </a>
             <ul class="submenu ">
@@ -161,7 +161,7 @@
         <li
             class="sidebar-item  has-sub">
             <a href="{{route('transactions.customers.index')}}" class='sidebar-link'>
-                <i class="bi bi-dollar"></i>
+                <i class="bi bi-cash-stack"></i>
                 <span>Customer Transactions</span>
             </a>
             <ul class="submenu ">

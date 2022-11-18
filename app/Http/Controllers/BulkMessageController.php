@@ -127,13 +127,40 @@ class BulkMessageController extends Controller
 
     public function messagePhoneBook()
     {
-        $phonebooks = PhoneBook::whereclient_id($this->clientID)->get();
-        return view('messages.message.create-phonebook', compact('phonebooks'));
+        $phoneBooks = PhoneBook::with('contacts')->whereclient_id($this->clientID)->get();
+        $senderNames = SenderName::whereclient_id($this->clientID)->get();
+        return view('messages.message.create-phonebook', compact('phoneBooks','senderNames'));
     }
 
     public function storeMessagePhoneBook(Request $request)
     {
-        dd($request->phone_numbers);
+        $request->validate([
+            'phonebook_id'=> 'required|integer',
+            'sender_id'=> 'required|integer',
+            'message' => 'required|max:255',
+        ]);
+        $phoneBook = PhoneBook::findOrFail($request->phonebook_id);
+        $contacts = $phoneBook->contacts;
+        if($contacts->count() == 0) {
+            return back()->with('error','PhoneBook has No Contacts');
+        }
+        $message = filter_var($request->message, FILTER_SANITIZE_STRING);
+        $senderName = SenderName::whereid($request->sender_id)->value('short_code');
+        foreach ($contacts as $contact){
+            $phone = $contact->phone;
+            $this->bulkMessageService->sendBulk($senderName,$message,$phone);
+
+            BulkMessage::create([
+                "message" => $message,
+                "destination" => $phone,
+                "brand_id" => $request->brand_id ??null,
+                "client_id" => $this->clientID ??null,
+                "campaign_id" => $request->campaign_id ??null,
+                "sender_id" => $request->sender_id ??null,
+            ]);
+        }
+
+        return back()->with('success','Messages Sent Successfully');
     }
 
     public function createQuicksend()
