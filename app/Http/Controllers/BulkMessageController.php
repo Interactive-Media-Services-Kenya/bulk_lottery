@@ -35,7 +35,7 @@ class BulkMessageController extends Controller
      */
     public function index()
     {
-        $bulkMessages = BulkMessage::all();
+        $bulkMessages = BulkMessage::latest()->get();
         return view('messages.index', compact('bulkMessages'));
     }
 

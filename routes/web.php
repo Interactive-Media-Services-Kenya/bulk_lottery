@@ -9,6 +9,8 @@ use App\Http\Controllers\SenderNameController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\PhoneBookController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OTPController;
 use App\Http\Controllers\TransactionCustomerController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -34,12 +36,22 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('otp', [App\Http\Controllers\OTPController::class,'index'])->name('otp.index');
-Route::post('otp', [App\Http\Controllers\OTPController::class,'store'])->name('otp.post');
-Route::get('otp/reset', [App\Http\Controllers\OTPController::class,'resend'])->name('otp.resend');
 
+//OTP routes
+Route::get('otp', [OTPController::class,'index'])->name('otp.index');
+Route::post('otp', [OTPController::class,'store'])->name('otp.post');
+Route::get('otp/reset', [OTPController::class,'resend'])->name('otp.resend');
+
+//First Time Login routes
 Route::group(['middleware' => ['auth:web','otp']], function () {
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('users/update/password', [UserController::class,'createPassword'])->name('users.update.create.password');
+    Route::put('users/update/password/{id}', [UserController::class,'updatePassword'])->name('users.update.password');
+});
+
+
+
+Route::group(['middleware' => ['auth:web','otp','user_first_login']], function () {
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('clients/departments/create',[ClientController::class, 'createDepartment'])->name('clients.departments.create');
     Route::get('clients/departments/index',[ClientController::class, 'departments'])->name('clients.departments.index');
     Route::get('clients/departments/{id}/edit',[ClientController::class, 'editDepartment'])->name('clients.departments.edit');
@@ -99,6 +111,8 @@ Route::group(['middleware' => ['auth:web','otp']], function () {
     Route::resource('phonebooks', PhoneBookController::class);
 
     //Users
+
     Route::resource('users', UserController::class);
 });
+
 

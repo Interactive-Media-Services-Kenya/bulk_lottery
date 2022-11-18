@@ -9,14 +9,14 @@
     <div class="page-title">
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>All Brands</h3>
-                <p class="text-subtitle text-muted">Click on Brand Name to View Entire Details</p>
+                <h3>All users</h3>
+                <p class="text-subtitle text-muted">Click on User Name to View Entire Details</p>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('home')}}">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Brands</li>
+                        <li class="breadcrumb-item active" aria-current="page">Users</li>
                     </ol>
                 </nav>
             </div>
@@ -27,42 +27,42 @@
     <section class="section">
         <div class="card">
             <div class="card-header">
-                Brands
-                <a href="{{route('brands.create')}}" class="btn btn-primary float-start float-lg-end">Add Brand</a>
+                Users
+                <a href="{{route('users.create')}}" class="btn btn-primary float-start float-lg-end">Add user</a>
             </div>
             <div class="card-body">
                 <table class="table" id="table1">
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Client</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Department</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($brands as $item)
+                        @forelse ($users as $item)
                         <tr>
                             <td>{{$item->name}}</td>
-                            <td>{{$item->client->name??''}}</td>
-                            <td>
-                                <a href="{{route('brands.edit',[$item->id])}}" class="btn btn-sm btn-warning"><i class="bi-pencil"></i></a>&nbsp;<a class="btn btn-sm btn-danger" href="{{ route('brands.index') }}"
+                            <td>{{$item->email}}</td>
+                            <td>{{$item->phone}}</td>
+                            <td>{{$item->department->name}}</td>
+
+                               <td><a href="{{route('users.edit',[$item->id])}}" class="btn btn-sm btn-warning"><i class="bi-pencil"></i></a>&nbsp;<a class="btn btn-sm btn-danger" href="{{ route('users.index') }}"
                                 onclick="
-                                confirm('Are you sure you want to Delete this Brand?');
+                                confirm('Are you sure you want to Delete this campaign?');
                                 event.preventDefault();
                                  document.getElementById(
                                    'delete-form-{{$item->id}}').submit();"><i class="bi-trash"></i></a></td>
                                <form id="delete-form-{{$item->id}}"
-                                + action="{{route('brands.destroy', $item->id)}}"
+                                + action="{{route('campaigns.destroy', $item->id)}}"
                                 method="post">
                               @csrf @method('DELETE')
-                          </form>
-                            </td>
-                        </tr>
+                          </form></tr>
                         @empty
-                        <tr>
-                            <td colspan="3">No Data</td>
-                        </tr>
                         @endforelse
+
                     </tbody>
                 </table>
             </div>
@@ -72,7 +72,7 @@
     <!-- Basic Tables end -->
 @endsection
 @section('scripts')
-<script src="assets/extensions/jquery/jquery.min.js"></script>
+<script src="{{asset('assets/extensions/jquery/jquery.min.js')}}"></script>
 <script src="https://cdn.datatables.net/v/bs5/dt-1.12.1/datatables.min.js"></script>
-<script src="assets/js/pages/datatables.js"></script>
+<script src="{{asset('assets/js/pages/datatables.js')}}"></script>
 @endsection

@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Session;
 
-class CheckOTP
+class FirstLogin
 {
     /**
      * Handle an incoming request.
@@ -17,10 +17,12 @@ class CheckOTP
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!Session::has('user_otp')) {
-            return redirect()->route('otp.index');
+        if (auth()->user()->first_login == 0) {
+            Session::put('user_first_login', auth()->user()->id);
         }
-
+        if (!Session::has('user_first_login')) {
+            return redirect()->route('users.update.create.password');
+        }
         return $next($request);
     }
 }
