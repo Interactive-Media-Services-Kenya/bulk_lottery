@@ -64,7 +64,10 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'otp' => \App\Http\Middleware\CheckOTP::class,
-        'user_first_login'=> \App\Http\Middleware\FirstLogin::class,
-        'user_has_client'=> \App\Http\Middleware\CheckClient::class,
+        'user_first_login' => \App\Http\Middleware\FirstLogin::class,
+        'user_has_client' => \App\Http\Middleware\CheckClient::class,
+        'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+        'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+        'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
     ];
 }

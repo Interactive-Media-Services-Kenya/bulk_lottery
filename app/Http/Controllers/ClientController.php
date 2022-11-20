@@ -32,7 +32,7 @@ class ClientController extends Controller
         $request->validate([
             'name' =>'required|string|max:255',
             'email' =>'required|string|email|unique:clients,email',
-            'phone'=> 'required|integer|digits:12',
+            'phone'=> 'required|integer|digits:12|unique:clients',
         ]);
 
         $client = Client::create($request->all());

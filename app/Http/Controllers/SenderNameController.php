@@ -8,6 +8,10 @@ use App\Models\Client;
 
 class SenderNameController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['role:Admin', 'permission:sender_name_management']);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -40,11 +44,11 @@ class SenderNameController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'short_code'=>'required|max:30',
+            'short_code' => 'required|max:30',
         ]);
 
         $senderName = SenderName::create([
-            'short_code'=> $request->short_code,
+            'short_code' => $request->short_code,
             'sdpaccesscode' => $request->sdpaccesscode,
             'sdpserviceid' => $request->sdpserviceid,
             'spid' => $request->spid,
@@ -52,7 +56,7 @@ class SenderNameController extends Controller
             'client_id' => $request->client_id,
         ]);
 
-        return redirect()->route('sendernames.index')->with('success','Sender Name '. $senderName->short_code. ' Created Successfully');
+        return redirect()->route('sendernames.index')->with('success', 'Sender Name ' . $senderName->short_code . ' Created Successfully');
     }
 
     /**
@@ -84,7 +88,7 @@ class SenderNameController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,SenderName $senderName)
+    public function update(Request $request, SenderName $senderName)
     {
         //
     }
@@ -100,6 +104,6 @@ class SenderNameController extends Controller
         $senderName = SenderName::findOrFail($senderNameid);
         $senderName->delete();
 
-        return back()->with('success','Sender Name has been successfully deleted.');
+        return back()->with('success', 'Sender Name has been successfully deleted.');
     }
 }
