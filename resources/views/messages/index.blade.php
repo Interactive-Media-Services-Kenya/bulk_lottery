@@ -1,8 +1,10 @@
 @extends('layouts.backend')
 @section('styles')
-    <link rel="stylesheet" href="assets/css/pages/fontawesome.css">
-    <link rel="stylesheet" href="assets/extensions/datatables.net-bs5/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="assets/css/pages/datatables.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/pages/fontawesome.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/extensions/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/pages/datatables.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/datetime/1.2.0/css/dataTables.dateTime.min.css">
 @endsection
 @section('content')
     <div class="page-heading">
@@ -15,7 +17,7 @@
                 <div class="col-12 col-md-6 order-md-2 order-first">
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{route('home')}}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Messages</li>
                         </ol>
                     </nav>
@@ -28,9 +30,22 @@
             <div class="card">
                 <div class="card-header">
                     Messages
-                    <a href="{{route('messages.create')}}" class="btn btn-primary float-start float-lg-end">Add Messages</a>
+                    <a href="{{ route('messages.create') }}" class="btn btn-primary float-start float-lg-end">Add
+                        Messages</a>
                 </div>
                 <div class="card-body">
+                    <table border="0" cellspacing="5" cellpadding="5">
+                        <tbody>
+                            <tr>
+                                <td>Minimum date:</td>
+                                <td><input type="text" id="min" name="min"></td>
+                            </tr>
+                            <tr>
+                                <td>Maximum date:</td>
+                                <td><input type="text" id="max" name="max"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <table class="table" id="table1">
                         <thead>
                             <tr>
@@ -47,8 +62,8 @@
                             @forelse($bulkMessages as $item)
                                 <tr>
                                     <td>{{ $item->destination ?? '' }}</td>
-                                    <td>{{ \Str::of($item->message)->words(10,' ...') ?? '' }}</td>
-                                    <th>{{$item->senderName->short_code??''}}</th>
+                                    <td>{{ \Str::of($item->message)->words(10, ' ...') ?? '' }}</td>
+                                    <th>{{ $item->senderName->short_code ?? '' }}</th>
                                     <td>{{ $item->client->name ?? '' }}</td>
                                     <td>{{ $item->brand->name ?? '' }}</td>
                                     <td>{{ $item->created_at ?? '' }}</td>
@@ -79,7 +94,48 @@
         <!-- Basic Tables end -->
     @endsection
     @section('scripts')
-        <script src="assets/extensions/jquery/jquery.min.js"></script>
-        <script src="https://cdn.datatables.net/v/bs5/dt-1.12.1/datatables.min.js"></script>
-        <script src="assets/js/pages/datatables.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
+        <script src="https://cdn.datatables.net/datetime/1.2.0/js/dataTables.dateTime.min.js"></script>
+        <script>
+            var minDate, maxDate;
+
+            // Custom filtering function which will search data in column four between two values
+            $.fn.dataTable.ext.search.push(
+                function(settings, data, dataIndex) {
+                    var min = minDate.val();
+                    var max = maxDate.val();
+                    var date = new Date(data[5]);
+
+                    if (
+                        (min === null && max === null) ||
+                        (min === null && date <= max) ||
+                        (min <= date && max === null) ||
+                        (min <= date && date <= max)
+                    ) {
+                        return true;
+                    }
+                    return false;
+                }
+            );
+
+            $(document).ready(function() {
+                // Create date inputs
+                minDate = new DateTime($('#min'), {
+                    format: 'MMMM Do YYYY'
+                });
+                maxDate = new DateTime($('#max'), {
+                    format: 'MMMM Do YYYY'
+                });
+
+                // DataTables initialisation
+                var table = $('#table1').DataTable();
+
+                // Refilter the table
+                $('#min, #max').on('change', function() {
+                    table.draw();
+                });
+            });
+        </script>
     @endsection

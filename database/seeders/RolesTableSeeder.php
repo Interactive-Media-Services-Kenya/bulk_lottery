@@ -15,14 +15,24 @@ class RolesTableSeeder extends Seeder
      */
     public function run()
     {
-        $roles = [
-            [
-                'name' => 'Admin',
-                'guard_name' => 'web',
-            ]
-        ];
+        /*-----------------------------------------------------------------------------
+        -                                                                             -
+        -                                                                             -
+        - Roles Seeds Are created Alongside permissions in the PermissionsTableSeeder -
+        -                                                                             -
+        -                                                                             -
+        -------------------------------------------------------------------------------
+        */
+        // $roles = [
+        //     [
+        //         'name' => 'Admin',
+        //         'guard_name' => 'web',
+        //     ]
+        // ];
 
-        Role::insert($roles);
+        // Role::insert($roles);
+
+
 
     }
 }

@@ -24,6 +24,8 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'clients_management']);
 
         $role = Role::create(['name' => 'Admin']);
+        $role1 = Role::create(['name' => 'Client']);
+
         $role->givePermissionTo(Permission::all());
     }
 }
