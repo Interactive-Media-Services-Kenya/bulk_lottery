@@ -28,7 +28,7 @@ body {
     margin-bottom: 7rem;
 }
 #auth #auth-left .auth-logo img {
-    height: 2rem;
+    height: 5rem;
 }
 @media screen and (max-width: 767px) {
     #auth #auth-left {
