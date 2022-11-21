@@ -179,32 +179,39 @@ class TransactionController extends Controller
 
     public function callbackCustomers(Request $request){
         logger('Endpoint Hit');
+        // {"mpesa_trx_time":"20221121130531","mpesa_code":"QKL8D9FVIC_3","mpesa_amt":"50","mpesa_msisdn":"254727414475","mpesa_trx_date":"2022-11-21","":"24768431","mpesa_sender":"KELVIN ZIANA OTIENO"}
         $stkCallbackResponse = $request->getContent();
         info($stkCallbackResponse);
-        $data = json_decode($stkCallbackResponse);
+        // $data = json_decode($stkCallbackResponse);
 
-        $user = $_GET['user'];
-        $quantity = $_GET['quantity'];
+            // $result_desc = $data->Body->stkCallback->ResultDesc;
+            // $result_code = $data->Body->stkCallback->ResultCode;
+            // $merchant_request_id = $data->Body->stkCallback->MerchantRequestID;
+            // $checkout_request_id = $data->Body->stkCallback->CheckoutRequestID;
+            $transaction_date = $stkCallbackResponse["mpesa_trx_time"];
+            $phone_number = $stkCallbackResponse["mpesa_msisdn"];
+            $amount = $stkCallbackResponse["mpesa_amt"];
+            $mpesa_receipt_number = $stkCallbackResponse["mpesa_code"];
 
-            $result_desc = $data->Body->stkCallback->ResultDesc;
-            $result_code = $data->Body->stkCallback->ResultCode;
-            $merchant_request_id = $data->Body->stkCallback->MerchantRequestID;
-            $checkout_request_id = $data->Body->stkCallback->CheckoutRequestID;
-            $amount = $data->Body->stkCallback->CallbackMetadata->Item[0]->Value;
-            $mpesa_receipt_number = $data->Body->stkCallback->CallbackMetadata->Item[1]->Value;
-            $transaction_date = $data->Body->stkCallback->CallbackMetadata->Item[3]->Value;
-            $phone_number = $data->Body->stkCallback->CallbackMetadata->Item[4]->Value;
+            $mpesa_transaction_date = $stkCallbackResponse["mpesa_trx_date"];
+            $mpesa_acc =$stkCallbackResponse["mpesa_acc"];
+            $mpesa_sender = $stkCallbackResponse["mpesa_sender"];
 
             //Save Transaction Data to Database
             TransactionCustomer::create([
-                'result_desc' => $result_desc,
+                'mpesa_trx_time' => $transaction_date,
                 'msisdn' => $phone_number,
                 'transaction_date' => $transaction_date,
                 'reference' => $mpesa_receipt_number,
                 'amount' => $amount,
-                'merchant_request_id' => $merchant_request_id,
-                'result_code' => $result_code,
-                'checkout_request_id' => $checkout_request_id
+                'mpesa_transaction_date' => $mpesa_transaction_date,
+                'mpesa_account' => $mpesa_acc,
+                'mpesa_sender' => $mpesa_sender,
+            ]);
+
+            return response()->json([
+                'status' => 200,
+                'message'=> 'Payment Details Added Successfully'
             ]);
     }
 }

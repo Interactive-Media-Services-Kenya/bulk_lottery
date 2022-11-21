@@ -1,8 +1,8 @@
 @extends('layouts.backend')
 @section('styles')
-    <link rel="stylesheet" href="{{asset('assets/css/pages/fontawesome.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/extensions/datatables.net-bs5/css/dataTables.bootstrap5.min.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/css/pages/datatables.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/css/pages/fontawesome.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/extensions/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/pages/datatables.css') }}">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/datetime/1.2.0/css/dataTables.dateTime.min.css">
 @endsection
@@ -127,6 +127,8 @@
                             <tr>
                                 <th>TransactionID</th>
                                 <th>Phone</th>
+                                <th>Sender Name</th>
+                                <th>Account</th>
                                 <th>Amount</th>
                                 <th>Date</th>
                             </tr>
@@ -136,12 +138,14 @@
                                 <tr>
                                     <td>{{ $item->reference }}</td>
                                     <td>{{ $item->msisdn }}</td>
+                                    <td>{{ $item->mpesa_sender }}</td>
+                                    <td>{{ $item->mpesa_account }}</td>
                                     <td>{{ $item->amount }}</td>
                                     <td>{{ $item->created_at }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center">No Transactions</td>
+                                    <td colspan="6" class="text-center">No Transactions</td>
                                 </tr>
                             @endforelse
 
@@ -166,7 +170,7 @@
                 function(settings, data, dataIndex) {
                     var min = minDate.val();
                     var max = maxDate.val();
-                    var date = new Date(data[3]);
+                    var date = new Date(data[5]);
 
                     if (
                         (min === null && max === null) ||
