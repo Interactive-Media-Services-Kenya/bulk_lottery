@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>403 - Mazer Admin Dashboard</title>
+    <title>405 - {{env('APP_NAME')}} Admin Dashboard</title>
     <link rel="stylesheet" href="assets/css/main/app.css">
     <link rel="stylesheet" href="assets/css/pages/error.css">
     <link rel="shortcut icon" href="assets/images/logo/favicon.svg" type="image/x-icon">
@@ -20,7 +20,7 @@
         <div class="text-center">
             <img class="img-error" src="assets/images/samples/error-403.svg" alt="Not Found">
             <h1 class="error-title">Forbidden</h1>
-            <p class="fs-5 text-gray-600">You are unauthorized to see this page.</p>
+            <p class="fs-5 text-gray-600">Method Not Allowed. Invalid Request</p>
             <a href="{{route('home')}}" class="btn btn-lg btn-outline-primary mt-3">Go Home</a>
         </div>
     </div>
