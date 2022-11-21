@@ -182,20 +182,20 @@ class TransactionController extends Controller
         // {"mpesa_trx_time":"20221121130531","mpesa_code":"QKL8D9FVIC_3","mpesa_amt":"50","mpesa_msisdn":"254727414475","mpesa_trx_date":"2022-11-21","":"24768431","mpesa_sender":"KELVIN ZIANA OTIENO"}
         $stkCallbackResponse = $request->getContent();
         info($stkCallbackResponse);
-        // $data = json_decode($stkCallbackResponse);
+         $data = json_decode($stkCallbackResponse);
 
             // $result_desc = $data->Body->stkCallback->ResultDesc;
             // $result_code = $data->Body->stkCallback->ResultCode;
             // $merchant_request_id = $data->Body->stkCallback->MerchantRequestID;
             // $checkout_request_id = $data->Body->stkCallback->CheckoutRequestID;
-            $transaction_date = $stkCallbackResponse["mpesa_trx_time"];
-            $phone_number = $stkCallbackResponse["mpesa_msisdn"];
-            $amount = $stkCallbackResponse["mpesa_amt"];
-            $mpesa_receipt_number = $stkCallbackResponse["mpesa_code"];
+            $transaction_date = $data->mpesa_trx_time;
+            $phone_number = $data->mpesa_msisdn;
+            $amount = $data->mpesa_amt;
+            $mpesa_receipt_number = $data->mpesa_code;
 
-            $mpesa_transaction_date = $stkCallbackResponse["mpesa_trx_date"];
-            $mpesa_acc =$stkCallbackResponse["mpesa_acc"];
-            $mpesa_sender = $stkCallbackResponse["mpesa_sender"];
+            $mpesa_transaction_date = $data->mpesa_trx_date;
+            $mpesa_acc =$data->mpesa_acc;
+            $mpesa_sender = $data->mpesa_sender;
 
             //Save Transaction Data to Database
             TransactionCustomer::create([
