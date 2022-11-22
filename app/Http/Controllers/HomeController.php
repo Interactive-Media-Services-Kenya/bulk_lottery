@@ -16,9 +16,17 @@ class HomeController extends Controller
      *
      * @return void
      */
+    public $clientID, $userID;
+
     public function __construct()
     {
+
         $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            $this->clientID = auth()->user()->client_id;
+            $this->userID = auth()->user()->id;
+            return $next($request);
+        });
     }
 
     /**
@@ -29,7 +37,7 @@ class HomeController extends Controller
     public function index()
     {
         try {
-            DB::connection()->getPdo();
+            DB::connection('mysql2')->getPdo();
         } catch (\Exception $e) {
             die("Could not connect to the database.  Please check your configuration. error:" . $e );
         }
@@ -42,11 +50,11 @@ class HomeController extends Controller
 
     public function getDashboardStats()
     {
-        $transactions = Transaction::count();
-        $messages = BulkMessage::count();
-        $uniqueNumbers = collect(BulkMessage::select('destination')->get())->unique()->count();
-        $accountBalance = UserBulkAccount::whereclient_id(auth()->user()->client_id)->value('bulk_balance') ?? 0.00;
-        $totalTransactions = DB::table('transactions')->whereclient_id(auth()->user()->client_id)->sum('amount');
+        $transactions = Transaction::whereclient_id($this->clientID)->count();
+        $messages = BulkMessage::whereclient_id($this->clientID)->count();
+        $uniqueNumbers = collect(BulkMessage::select('destination')->whereclient_id($this->clientID)->get())->unique()->count();
+        $accountBalance = UserBulkAccount::whereclient_id($this->clientID)->value('bulk_balance') ?? 0.00;
+        $totalTransactions = DB::table('transactions')->whereclient_id($this->clientID)->sum('amount');
         $statistics = [
             'transactions' => $transactions,
             'messages' => $messages,
