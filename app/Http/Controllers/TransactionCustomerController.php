@@ -14,7 +14,7 @@ class TransactionCustomerController extends Controller
         $this->middleware(['role:Admin', 'permission:transaction_customers_management']);
     }
     public function index(){
-        $transactions = TransactionCustomer::all();
+        $transactions = TransactionCustomer::latest();
         $transactionsCustomer = $this->getCustomerTransactionStats();
         return view('transactions.customers.index',compact('transactions','transactionsCustomer'));
     }
