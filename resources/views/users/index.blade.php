@@ -44,10 +44,10 @@
                     <tbody>
                         @forelse ($users as $item)
                         <tr>
-                            <td>{{$item->name}}</td>
-                            <td>{{$item->email}}</td>
-                            <td>{{$item->phone}}</td>
-                            <td>{{$item->department->name}}</td>
+                            <td>{{$item->name??'No Name'}}</td>
+                            <td>{{$item->email??'No Email'}}</td>
+                            <td>{{$item->phone??'No Phone'}}</td>
+                            <td>{{$item->department->name??'No Name'}}</td>
 
                                <td><a href="{{route('users.edit',[$item->id])}}" class="btn btn-sm btn-warning"><i class="bi-pencil"></i></a>&nbsp;<a class="btn btn-sm btn-danger" href="{{ route('users.index') }}"
                                 onclick="
