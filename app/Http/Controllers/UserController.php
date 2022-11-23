@@ -136,7 +136,7 @@ class UserController extends Controller
         ]);
 
         $user = User::findOrFail($id);
-
+        $user->syncPermissions($request->permission_id);
         $user->update([
             'name' => $request->name,
             'phone' => $request->phone,
