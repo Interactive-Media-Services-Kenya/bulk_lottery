@@ -33,7 +33,7 @@ class UserController extends Controller
     {
         //Users for admin access
         $users = User::whereclient_id($this->clientID)->get();
-        return view('users.index',compact('users'));
+        return view('users.index', compact('users'));
     }
 
     /**
@@ -49,7 +49,7 @@ class UserController extends Controller
         $user = User::findOrFail($this->userID);
         $permissions = $user->permissions;
 
-        return view('users.create', compact('clients','departments','permissions'));
+        return view('users.create', compact('clients', 'departments', 'permissions'));
     }
 
     /**
@@ -61,30 +61,32 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'=>'required|string|max:255',
-            'email'=>'required|string|unique:users|max:255',
-            'phone'=>'required|integer|digits:12|unique:users',
-            'title'=>'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|unique:users|max:255',
+            'phone' => 'required|integer|digits:12|unique:users',
+            'title' => 'required|string|max:255',
         ]);
 
         $password = $this->generatePassword();
 
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'phone' => $request->phone,
-            'email' => $request->email??null,
-            'title' => $request->title?? null,
-            'client_id' => $this->clientID??null,
-            'client_department_id' => $request->client_department_id??null,
-            'password'=> Hash::make($password)
+            'email' => $request->email ?? null,
+            'title' => $request->title ?? null,
+            'client_id' => $this->clientID ?? null,
+            'client_department_id' => $request->client_department_id ?? null,
+            'password' => Hash::make($password)
         ]);
+
+        $user->syncPermissions($request->permission_id);
 
         //Send Login Details to User
         $loginUrl = route('login');
-        $message = 'Hello! Greatings from '.env('APP_NAME'). '. You have been assigned an account on our platform. Kindly Use the following details to login to @'.$loginUrl.' Email:'.$request->email. ' Password: '.$password;
-        $details =[
-            'subject'=> 'Registration Details',
-            'body'=> $message,
+        $message = 'Hello! Greatings from ' . env('APP_NAME') . '. You have been assigned an account on our platform. Kindly Use the following details to login to @' . $loginUrl . ' Email:' . $request->email . ' Password: ' . $password;
+        $details = [
+            'subject' => 'Registration Details',
+            'body' => $message,
         ];
 
         Mail::to($request->email)->send(new SendRegistration($details));
@@ -112,7 +114,8 @@ class UserController extends Controller
     {
         $departments = ClientDepartment::whereclient_id($this->clientID)->get();
         $user = User::findOrFail($id);
-        return view('users.edit', compact('user','departments'));
+        $permissions = $user->permissions;
+        return view('users.edit', compact('user', 'departments','permissions'));
     }
 
     /**
@@ -125,10 +128,10 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name'=>'required|string|max:255',
-            'email'=>'required|string|max:255',
-            'phone'=>'required|integer|digits:12',
-            'title'=>'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'phone' => 'required|integer|digits:12',
+            'title' => 'required|string|max:255',
         ]);
 
         $user = User::findOrFail($id);
@@ -136,10 +139,10 @@ class UserController extends Controller
         $user->update([
             'name' => $request->name,
             'phone' => $request->phone,
-            'email' => $request->email??null,
-            'title' => $request->title?? null,
-            'client_id' => $this->clientID??null,
-            'client_department_id' => $request->client_department_id??null,
+            'email' => $request->email ?? null,
+            'title' => $request->title ?? null,
+            'client_id' => $this->clientID ?? null,
+            'client_department_id' => $request->client_department_id ?? null,
         ]);
 
         return redirect()->route('users.index')->with('success', 'Users Updated Successfully');
@@ -160,7 +163,8 @@ class UserController extends Controller
         return back()->with('success', 'User deleted successfully');
     }
 
-    public function generatePassword(){
+    public function generatePassword()
+    {
         $permitted_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*().';
 
         $password =  substr(str_shuffle($permitted_chars), 0, 8);
@@ -168,20 +172,22 @@ class UserController extends Controller
         return $password;
     }
 
-    public function createPassword(){
+    public function createPassword()
+    {
         return view('users.create_password');
     }
 
-    public function updatePassword(Request $request,$id){
+    public function updatePassword(Request $request, $id)
+    {
         $request->validate([
-            'password' =>'required|min:8|string|confirmed'
+            'password' => 'required|min:8|string|confirmed'
         ]);
 
         $user = User::findOrFail($id);
 
         $user->update([
-            'password'=> Hash::make($request->password),
-            'first_login'=> 0 //Change first time login value to 0
+            'password' => Hash::make($request->password),
+            'first_login' => 0 //Change first time login value to 0
         ]);
         Session::put('user_first_login', auth()->user()->id);
 

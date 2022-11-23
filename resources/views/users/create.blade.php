@@ -97,17 +97,17 @@
                                             <div class="col-md-12 col-12">
                                                 <label for="first-name-column">Select Permissions</label>
                                                 <fieldset class="form-group">
-                                                    <select class="form-select selectPermissions" id="client_department_id"
-                                                        name="client_department_id[]" multiple="multiple">
+                                                    <select class="form-select selectPermissions" id="permission_id"
+                                                        name="permission_id[]" multiple="multiple">
                                                         @forelse ($permissions as $item)
                                                             <option value="{{ $item->id }}">{{ $item->name }}
                                                             </option>
                                                         @empty
-                                                            <option>No Departments Added</option>
+                                                            <option>No Permissions Available Added</option>
                                                         @endforelse
                                                     </select>
                                                 </fieldset>
-                                                @error('client_department_id')
+                                                @error('permission_id')
                                                     <p class="text-danger">{{ $message }}</p>
                                                 @enderror
                                             </div>
