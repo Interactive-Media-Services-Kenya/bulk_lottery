@@ -114,7 +114,8 @@ class UserController extends Controller
     {
         $departments = ClientDepartment::whereclient_id($this->clientID)->get();
         $user = User::findOrFail($id);
-        $permissions = $user->permissions;
+        $userPerms = User::findOrFail($this->userID);
+        $permissions = $userPerms->permissions;
         return view('users.edit', compact('user', 'departments','permissions'));
     }
 
