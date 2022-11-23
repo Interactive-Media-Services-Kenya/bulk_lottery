@@ -108,6 +108,9 @@ Route::group(['middleware' => ['auth:web','otp','user_first_login','user_has_cli
     Route::get('transactions/customers/index',[TransactionCustomerController::class,'index'])->name('transactions.customers.index');
 
     //Contacts & PhoneBook
+    Route::get('contacts/phonebook/import/create',[ContactController::class,'createImportPhoneBook'])->name('contacts.phonebook.import.create');
+    Route::get('contacts/phonebook/import/file',[ContactController::class,'getImportPhoneBook'])->name('contacts.phonebook.import.get');
+    Route::post('contacts/phonebook/import/store',[ContactController::class,'storeImportPhoneBook'])->name('contacts.phonebook.import.store');
     Route::get('contacts/blacklists/index',[ContactController::class,'blacklists'])->name('contacts.blacklists.index');
     Route::get('contacts/blacklists/create',[ContactController::class,'createBlacklists'])->name('contacts.blacklists.create');
     Route::post('contacts/blacklists/index',[ContactController::class,'storeBlacklists'])->name('contacts.blacklists.store');

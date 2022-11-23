@@ -28,7 +28,7 @@
         <div class="card">
             <div class="card-header">
                 Contacts
-                <a href="{{route('contacts.create')}}" class="btn btn-primary float-start float-lg-end">Add Contact</a>
+                <a href="{{route('contacts.phonebook.import.create')}}" class="btn btn-primary float-start float-lg-end">Import Contacts to PhoneBook</a>
             </div>
             <div class="card-body">
                 <table class="table" id="table1">
@@ -36,17 +36,17 @@
                         <tr>
                             <th>Name</th>
                             <th>Phone</th>
-                            <th>Contact Description</th>
+                            <th>Email</th>
                             <th>Date Created</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($phoneBook->contacts() as $item)
+                        @forelse ($phoneBook->contacts as $item)
                         <tr>
                             <td>{{$item->name}}</td>
                             <td>{{$item->phone}}</td>
-                            <td>{{$item->description}}</td>
+                            <td>{{$item->email??'No Email'}}</td>
                             <td>{{$item->created_at}}</td>
                                <td><a href="{{route('contacts.edit',[$item->id])}}" class="btn btn-sm btn-warning"><i class="bi-pencil"></i></a>&nbsp;<a class="btn btn-sm btn-danger" href="{{ route('phonebooks.index') }}"
                                 onclick="

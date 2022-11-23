@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ContactExport;
+use App\Imports\ContactImport;
 use App\Models\Blacklist;
 use App\Models\Contact;
 use App\Models\PhoneBook;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ContactController extends Controller
 {
@@ -177,5 +180,31 @@ class ContactController extends Controller
         $contact = Contact::findOrFail($id);
         $contact->delete();
         return redirect()->route('contacts.index')->with('success', 'Contact Deleted Successfully');
+    }
+
+
+    //Get PhoneBook Smple Import FIle
+    public function getImportPhoneBook(){
+        return Excel::download(new ContactExport, 'importPhoneBookContacts.xlsx');
+    }
+
+    public function createImportPhoneBook(){
+        $phoneBooks = PhoneBook::whereclient_id($this->clientID)->get();
+
+        return view('contacts.imports.create', compact('phoneBooks'));
+    }
+
+    public function storeImportPhoneBook(Request $request){
+        $this->validate($request, [
+            'phone_book_id' => 'required|integer',
+        ]);
+        //Pass PhoneBookID
+        try {
+            Excel::import(new ContactImport($request->phone_book_id), $request->file);
+            return redirect()->route('contacts.index');
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Contacts Not Imported To PhoneBook Successfully. Please Check on the Excel Data Imported');
+
+        }
     }
 }
