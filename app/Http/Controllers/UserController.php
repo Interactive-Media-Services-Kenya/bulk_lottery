@@ -46,8 +46,10 @@ class UserController extends Controller
         //Admin Access
         $clients = Client::all();
         $departments = ClientDepartment::whereclient_id($this->clientID)->get();
+        $user = User::findOrFail($this->userID);
+        $permissions = $user->permissions;
 
-        return view('users.create', compact('clients','departments'));
+        return view('users.create', compact('clients','departments','permissions'));
     }
 
     /**

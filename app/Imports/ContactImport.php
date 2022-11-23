@@ -29,6 +29,7 @@ class ContactImport implements ToCollection,WithHeadingRow
                 'name' => $row['name'],
                 'email' => $row['email'],
                 'phone' => $row['phone'],
+                'user_id' => $this->userID??null,
                 'phone_book_id'=> $this->phoneBookID??null,
                 'client_id' => $this->clientID??null,
             ]);

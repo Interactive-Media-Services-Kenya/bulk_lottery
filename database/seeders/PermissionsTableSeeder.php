@@ -22,10 +22,13 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'transactions_management']);
         Permission::create(['name' => 'transaction_customers_management']);
         Permission::create(['name' => 'clients_management']);
+        Permission::create(['name' => 'users_management']);
+        Permission::create(['name' => 'assign_permissions']);
 
-        $role = Role::create(['name' => 'Admin']);
-        $role1 = Role::create(['name' => 'Client']);
+        $roleAdmin = Role::create(['name' => 'Admin']);
+        $roleClient = Role::create(['name' => 'Client']);
 
-        $role->givePermissionTo(Permission::all());
+        $roleAdmin->givePermissionTo(Permission::all());
+        $roleClient->givePermissionTo('assign_permissions');
     }
 }
