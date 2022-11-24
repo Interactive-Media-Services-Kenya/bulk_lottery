@@ -66,6 +66,6 @@ class LoginController extends Controller
             return redirect()->route('otp.index');
         }
 
-        return redirect("login")->withSuccess('Opps! You have entered invalid credentials');
+        return redirect("login")->withErrors('Opps! You have entered invalid credentials');
     }
 }
