@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BulkMessage;
+use App\Models\Contact;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\UserBulkAccount;
@@ -52,7 +53,7 @@ class HomeController extends Controller
     {
         $transactions = Transaction::whereclient_id($this->clientID)->count();
         $messages = BulkMessage::whereclient_id($this->clientID)->count();
-        $uniqueNumbers = collect(BulkMessage::select('destination')->whereclient_id($this->clientID)->get())->unique()->count();
+        $uniqueNumbers = collect(Contact::select('phone')->whereclient_id($this->clientID)->get())->unique()->count();
         $accountBalance = UserBulkAccount::whereclient_id($this->clientID)->value('bulk_balance') ?? 0.00;
         $totalTransactions = DB::table('transactions')->whereclient_id($this->clientID)->sum('amount');
         $statistics = [
