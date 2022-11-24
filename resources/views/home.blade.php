@@ -19,7 +19,9 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">All Messages</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $dashboardStats['messages'] }}</h6>
+                                        <a href="{{ route('messages.index') }}">
+                                            <h6 class="font-extrabold mb-0">{{ $dashboardStats['messages'] }}</h6>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -36,7 +38,9 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Bulk Units</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $dashboardStats['accountBalance'] }}</h6>
+                                        <a href="{{ route('transactions.index') }}">
+                                            <h6 class="font-extrabold mb-0">{{ $dashboardStats['accountBalance'] }}</h6>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -53,7 +57,10 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Total Transactions</h6>
-                                        <h6 class="font-extrabold mb-0">KES {{ $dashboardStats['totalTransactions'] }}</h6>
+                                        <a href="{{ route('transactions.index') }}">
+                                            <h6 class="font-extrabold mb-0">KES {{ $dashboardStats['totalTransactions'] }}
+                                            </h6>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -70,14 +77,17 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Phone Numbers</h6>
-                                        <h6 class="font-extrabold mb-0">{{ $dashboardStats['uniqueNumbers'] }}</h6>
+                                        <a href="{{ route('contacts.index') }}">
+                                            <h6 class="font-extrabold mb-0">{{ $dashboardStats['uniqueNumbers'] }}</h6>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                @role('Admin')
+                @if (auth()->user()->hasrole('Admin') ||
+                    auth()->user()->can('transaction_customers_management'))
                     <div class="row">
                         <div class="col-6 col-lg-3 col-md-6">
                             <div class="card">
@@ -90,8 +100,10 @@
                                         </div>
                                         <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                             <h6 class="text-muted font-semibold">Total Transctions</h6>
-                                            <h6 class="font-extrabold mb-0">KES {{ $transactionsCustomer['totalTransactions'] }}
-                                            </h6>
+                                            <a href="{{ route('transactions.customers.index') }}">
+                                                <h6 class="font-extrabold mb-0">KES
+                                                    {{ $transactionsCustomer['totalTransactions'] }}</h6>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -108,8 +120,11 @@
                                         </div>
                                         <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                             <h6 class="text-muted font-semibold">Today Transactions</h6>
-                                            <h6 class="font-extrabold mb-0">KES {{ $transactionsCustomer['transactionsToday'] }}
-                                            </h6>
+                                            <a href="{{ route('transactions.customers.index') }}">
+                                                <h6 class="font-extrabold mb-0">KES
+                                                    {{ $transactionsCustomer['transactionsToday'] }}
+                                                </h6>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -126,8 +141,11 @@
                                         </div>
                                         <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                             <h6 class="text-muted font-semibold">Week Transactions</h6>
-                                            <h6 class="font-extrabold mb-0">KES {{ $transactionsCustomer['transactionsWeek'] }}
-                                            </h6>
+                                            <a href="{{ route('transactions.customers.index') }}">
+                                                <h6 class="font-extrabold mb-0">KES
+                                                    {{ $transactionsCustomer['transactionsWeek'] }}
+                                                </h6>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -144,15 +162,18 @@
                                         </div>
                                         <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                             <h6 class="text-muted font-semibold">Month Transactions</h6>
-                                            <h6 class="font-extrabold mb-0">KES {{ $transactionsCustomer['transactionsMonth'] }}
-                                            </h6>
+                                            <a href="{{ route('transactions.customers.index') }}">
+                                                <h6 class="font-extrabold mb-0">KES
+                                                    {{ $transactionsCustomer['transactionsMonth'] }}
+                                                </h6>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                @endrole
+                @endif
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
