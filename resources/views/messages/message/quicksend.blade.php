@@ -17,7 +17,7 @@
                 <div class="col-12 col-md-6 order-md-2 order-first">
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{route('home')}}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Quick Send</li>
                         </ol>
                     </nav>
@@ -55,8 +55,9 @@
                                                 <fieldset class="form-group">
                                                     <select class="form-select" id="sender_id" name="sender_id" required>
                                                         <option selected value="">Select SenderName</option>
-                                                        @forelse ($senderNames as $senderName) )
-                                                            <option value="{{$senderName->id}}">{{$senderName->short_code}}</option>
+                                                        @forelse ($senderNames as $senderName)
+                                                            <option value="{{ $senderName->id }}">
+                                                                {{ $senderName->short_code }}</option>
                                                         @empty
                                                             <option deselected>No Registred Sender Names</option>
                                                         @endforelse
@@ -66,24 +67,22 @@
                                                     <p class="text-danger">{{ $message }}</p>
                                                 @enderror
                                             </div>
-
-                                            <div class="row">
-                                                <div class="col-md-12 col-12">
-                                                    <div class="form-group">
-                                                        <label>Message</label>
-                                                        <textarea rows="10" class="form-control" placeholder="Start Typing Here ..." id="editor" name="message"></textarea>
-
-                                                    </div>
-                                                    @error('message')
-                                                        <p class="text-danger">{{ $message }}</p>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-12 d-flex justify-content-end">
-                                                    <button type="submit" class="btn btn-primary me-1 mb-1">Submit</button>
-                                                    <button type="reset"
-                                                        class="btn btn-light-secondary me-1 mb-1">Reset</button>
-                                                </div>
+                                            <div class="col-md-12 form-group">
+                                                <label>Message</label>
+                                                <textarea rows="10" class="form-control" placeholder="Start Typing Here ..." id="editor" name="message"></textarea>
+                                                <div id="informationchar"></div>
+                                                {{-- <div id="informationword"></div> --}}
+                                                <div id="informationparagraphs"></div>
                                             </div>
+                                            @error('message')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                            <div class="col-12 d-flex justify-content-end">
+                                                <button type="submit" class="btn btn-primary me-1 mb-1">Submit</button>
+                                                <button type="reset"
+                                                    class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                            </div>
+                                        </div>
                                 </form>
                             </div>
                         </div>
@@ -96,7 +95,7 @@
 @endsection
 @section('scripts')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-
-    <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
-    <script src="{{ asset('assets/js/pages/ckeditor.js') }}"></script>
+    <script src="{{ asset('assets/js/pages/ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('assets/js/pages/ckeditor/plugins/wordcount/plugin.js') }}"></script>
+    <script src="{{ asset('assets/js/pages/ckeditor.js')}}"></script>
 @endsection

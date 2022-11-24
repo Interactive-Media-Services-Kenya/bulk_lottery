@@ -83,7 +83,9 @@
                                                 <div class="form-group">
                                                     <label>Message</label>
                                                     <textarea rows="10" class="form-control" placeholder="Start Typing Here ..." id="editor" name="message"></textarea>
-
+                                                    <div id="informationchar"></div>
+                                                    {{-- <div id="informationword"></div> --}}
+                                                    <div id="informationparagraphs"></div>
                                                 </div>
                                                 @error('message')
                                                     <p class="text-danger">{{ $message }}</p>
@@ -107,7 +109,7 @@
 @endsection
 @section('scripts')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-
-    <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
+    <script src="{{ asset('assets/js/pages/ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('assets/js/pages/ckeditor/plugins/wordcount/plugin.js') }}"></script>
     <script src="{{ asset('assets/js/pages/ckeditor.js') }}"></script>
 @endsection

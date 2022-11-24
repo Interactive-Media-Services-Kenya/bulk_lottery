@@ -137,7 +137,7 @@ class BulkMessageController extends Controller
         $request->validate([
             'phonebook_id'=> 'required|integer',
             'sender_id'=> 'required|integer',
-            'message' => 'required|max:255',
+            'message' => 'required',
         ]);
         $phoneBook = PhoneBook::findOrFail($request->phonebook_id);
         $contacts = $phoneBook->contacts;
