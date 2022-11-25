@@ -25,7 +25,7 @@ class BulkResponseController extends Controller
         try {
             DB::connection('mysql2')->getPdo();
         } catch (\Exception $e) {
-            abort(500,$e);
+            abort(500);
         }
         $bulkMessages = BulkMessage::whereclient_id($this->clientID)->get();
         // $corelators = BulkResponse::select('correlator')->whereclient_id($this->clientID)->get();
