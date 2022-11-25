@@ -25,4 +25,9 @@ class BulkMessage extends Model
     public function senderName() {
         return $this->belongsTo(SenderName::class,'sender_id');
     }
+
+
+    public function bulkResponse(){
+        return $this->hasOne(BulkResponse::class,'message_id');
+    }
 }

@@ -129,44 +129,45 @@ class BulkMessageController extends Controller
     {
         $phoneBooks = PhoneBook::with('contacts')->whereclient_id($this->clientID)->get();
         $senderNames = SenderName::whereclient_id($this->clientID)->get();
-        return view('messages.message.create-phonebook', compact('phoneBooks','senderNames'));
+        return view('messages.message.create-phonebook', compact('phoneBooks', 'senderNames'));
     }
 
     public function storeMessagePhoneBook(Request $request)
     {
         $request->validate([
-            'phonebook_id'=> 'required|integer',
-            'sender_id'=> 'required|integer',
+            'phonebook_id' => 'required|integer',
+            'sender_id' => 'required|integer',
             'message' => 'required',
         ]);
         $phoneBook = PhoneBook::findOrFail($request->phonebook_id);
         $contacts = $phoneBook->contacts;
-        if($contacts->count() == 0) {
-            return back()->with('error','PhoneBook has No Contacts');
+        if ($contacts->count() == 0) {
+            return back()->with('error', 'PhoneBook has No Contacts');
         }
         $message = filter_var($request->message, FILTER_SANITIZE_STRING);
         $senderName = SenderName::whereid($request->sender_id)->value('short_code');
-        foreach ($contacts as $contact){
+        foreach ($contacts as $contact) {
             $phone = $contact->phone;
-            $this->bulkMessageService->sendBulk($senderName,$message,$phone);
 
-            BulkMessage::create([
+
+            $bulkMessage = BulkMessage::create([
                 "message" => $message,
                 "destination" => $phone,
-                "brand_id" => $request->brand_id ??null,
-                "client_id" => $this->clientID ??null,
-                "campaign_id" => $request->campaign_id ??null,
-                "sender_id" => $request->sender_id ??null,
+                "brand_id" => $request->brand_id ?? null,
+                "client_id" => $this->clientID ?? null,
+                "campaign_id" => $request->campaign_id ?? null,
+                "sender_id" => $request->sender_id ?? null,
             ]);
+            $this->bulkMessageService->sendBulk($senderName, $message, $phone, $this->clientID, $bulkMessage->id);
         }
 
-        return back()->with('success','Messages Sent Successfully');
+        return back()->with('success', 'Messages Sent Successfully');
     }
 
     public function createQuicksend()
     {
         $senderNames = SenderName::whereclient_id($this->clientID)->get();
-        return view('messages.message.quicksend',compact('senderNames'));
+        return view('messages.message.quicksend', compact('senderNames'));
     }
 
     public function storeQuickSend(Request $request)
@@ -183,22 +184,22 @@ class BulkMessageController extends Controller
         $accountBulkBalance = UserBulkAccount::whereclient_id($this->clientID)->value('bulk_balance');
 
         if ($phones->count() > $accountBulkBalance) {
-            return back()->with('error','Insufficient Bulk Units! Kindly Topup Your Bulk Balance to Continue');
+            return back()->with('error', 'Insufficient Bulk Units! Kindly Topup Your Bulk Balance to Continue');
         }
         $senderName = SenderName::whereid($request->sender_id)->value('short_code');
         $message = filter_var($request->message, FILTER_SANITIZE_STRING);
         $senderID = $request->sender_id;
         foreach ($phones as $phone) {
-            BulkMessage::create([
+            $bulkMessage = BulkMessage::create([
                 "message" => $message,
                 "destination" => $phone,
-                "brand_id" => $request->brand_id ??null,
-                "client_id" => $this->clientID ??null,
-                "campaign_id" => $request->campaign_id ??null,
-                "sender_id" => $senderID ??null,
+                "brand_id" => $request->brand_id ?? null,
+                "client_id" => $this->clientID ?? null,
+                "campaign_id" => $request->campaign_id ?? null,
+                "sender_id" => $senderID ?? null,
             ]);
-
-            $this->bulkMessageService->sendBulk($senderName,$message,$phone);
+            //Send Bulk Message
+            $this->bulkMessageService->sendBulk($senderName, $message, $phone, $this->clientID, $bulkMessage->id);
             // DB::connection('mysql2')->DB::table('messages_outgoing')->insert([
             //     'destination' => $row['phone'],
             //     'message' => $row['message'],
@@ -210,7 +211,7 @@ class BulkMessageController extends Controller
         //Update Bulk Balance if successfully imported
 
         UserBulkAccount::whereclient_id($this->clientID)->update([
-                'bulk_balance' => $accountBulkBalance - $phones->count()
+            'bulk_balance' => $accountBulkBalance - $phones->count()
         ]);
 
 

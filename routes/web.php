@@ -14,6 +14,7 @@ use App\Http\Controllers\OTPController;
 use App\Http\Controllers\TransactionCustomerController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BulkResponseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,6 +90,7 @@ Route::group(['middleware' => ['auth:web','otp','user_first_login','user_has_cli
     Route::post('messages/message/quicksend/store',[BulkMessageController::class, 'storeQuickSend'])->name('messages.message.quicksend.store');
     Route::get('messages/phonebook/message/create',[BulkMessageController::class, 'messagePhoneBook'])->name('messages.message.phonebook.create');
     Route::post('messages/phonebook/message/create',[BulkMessageController::class, 'storeMessagePhoneBook'])->name('messages.message.phonebook.store');
+    Route::get('messages/message/delivery/index',[BulkResponseController::class,'index'])->name('messages.message.delivery.index');
 
     //Sender Names
     Route::get('sendernames',[SenderNameController::class,'index'])->name('sendernames.index');

@@ -38,9 +38,9 @@ class HomeController extends Controller
     public function index()
     {
         try {
-            DB::connection()->getPdo();
+            DB::connection('mysql2')->getPdo();
         } catch (\Exception $e) {
-            die("Could not connect to the database.  Please check your configuration. error:" . $e );
+            abort(500);
         }
         $dashboardStats = $this->getDashboardStats();
         $latestStats = $this->getLatestDashboardStats();

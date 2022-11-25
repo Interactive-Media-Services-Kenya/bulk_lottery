@@ -135,8 +135,12 @@
                         <li class="submenu-item ">
                             <a href="{{ route('messages.index') }}">All SMS</a>
                         </li>
+                        <li class="submenu-item ">
+                            <a href="{{ route('messages.message.delivery.index') }}">SMS Delivery Status</a>
+                        </li>
                     </ul>
                 </li>
+
 
                 @if (auth()->user()->hasrole('Admin') ||
                     auth()->user()->can('sender_name_management'))

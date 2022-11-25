@@ -2,12 +2,18 @@
 
 namespace App\Services;
 
+use App\Http\Controllers;
+use App\Models\BulkResponse;
+use App\Models\BulkMessage;
+
 /**
  * Class BulkMessageService.
  */
 class BulkMessageService
 {
-    public function sendBulk($senderName,$message,$phoneNumber){
+
+    public function sendBulk($senderName, $message, $phoneNumber,$clientID,$messageID)
+    {
         try {
 
 
@@ -18,7 +24,7 @@ class BulkMessageService
             $encodeMessage = rawurlencode($message);
             //$encodMessage = $message;
 
-            $url = 'https://3.229.54.57/expresssms/Api/send_bulk_api?action=send-sms&api_key=Snh2SGFQT0dIZmFtcRGU9ZXBlcEQ=&to='.$phoneNumber.'&from='.$senderName.'&sms='.$encodeMessage.'&response=json&unicode=0&bulkbalanceuser=voucher';
+            $url = 'https://3.229.54.57/expresssms/Api/send_bulk_api?action=send-sms&api_key=Snh2SGFQT0dIZmFtcRGU9ZXBlcEQ=&to=' . $phoneNumber . '&from=' . $senderName . '&sms=' . $encodeMessage . '&response=json&unicode=0&bulkbalanceuser=voucher';
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -39,6 +45,18 @@ class BulkMessageService
             $date = date('m/d/Y h:i:s a', time());
 
             curl_close($ch);
+
+            //Save Message Delivery Status
+            $data = json_decode($response);
+            $bulkResponse = BulkResponse::create([
+                'code'  => $data->code,
+                'message'   =>  $data->message,
+                'correlator'    => $data->correlator,
+                'balance'   =>  $data->balance,
+                'user'  =>  $data->user,
+                'client_id' =>  $clientID,
+                'message_id'    =>  $messageID,
+            ]);
         } catch (\Exception $e) {
 
             return redirect()->back()->with("error", $e);

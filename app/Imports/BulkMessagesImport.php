@@ -54,7 +54,7 @@ class BulkMessagesImport implements ToCollection,WithHeadingRow
         }
         foreach ($rows as $row)
         {
-            BulkMessage::create([
+            $bulkMessage = BulkMessage::create([
                 "message" => $row['message'],
                 "destination" => $row['phone'],
                 "brand_id" => $this->brand_id??'',
@@ -66,7 +66,7 @@ class BulkMessagesImport implements ToCollection,WithHeadingRow
             $senderName = SenderName::whereid($this->sender_id)->value('short_code');
             $message = $row['message'];
             $phoneNumber = $row['phone'];
-            $this->bulkMessageService->sendBulk($senderName,$message,$phoneNumber);
+            $this->bulkMessageService->sendBulk($senderName,$message,$phoneNumber,$this->client_id,$bulkMessage->id);
             // DB::connection('mysql2')->DB::table('messages_outgoing')->insert([
             //     'destination' => $row['phone'],
             //     'message' => $row['message'],
