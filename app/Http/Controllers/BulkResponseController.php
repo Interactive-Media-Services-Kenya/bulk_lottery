@@ -6,6 +6,7 @@ use App\Models\BulkResponse;
 use Illuminate\Http\Request;
 use App\Models\BulkMessage;
 use App\Models\BulkStatus;
+use DB;
 
 class BulkResponseController extends Controller
 {
@@ -21,6 +22,11 @@ class BulkResponseController extends Controller
     }
     public function index()
     {
+        try {
+            DB::connection('mysql2')->getPdo();
+        } catch (\Exception $e) {
+            abort(500);
+        }
         $bulkMessages = BulkMessage::whereclient_id($this->clientID)->get();
         // $corelators = BulkResponse::select('correlator')->whereclient_id($this->clientID)->get();
         // $bulkResponses = BulkStatus::whereIn('correlator', $corelators)->get();
