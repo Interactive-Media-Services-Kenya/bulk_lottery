@@ -37,11 +37,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        try {
-            DB::connection('mysql2')->getPdo();
-        } catch (\Exception $e) {
-            abort(500);
-        }
         $dashboardStats = $this->getDashboardStats();
         $latestStats = $this->getLatestDashboardStats();
         $transactionsCustomer = $this->getCustomerTransactionStats();
