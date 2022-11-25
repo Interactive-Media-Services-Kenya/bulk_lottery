@@ -53,7 +53,7 @@
                                 <th>Message</th>
                                 <th>Sender Name</th>
                                 {{-- <th>Client</th> --}}
-                                <th>Delivery Status</th>
+                                <th class="text-center">Delivery Status</th>
                                 <th>Date Sent</th>
                             </tr>
                         </thead>
