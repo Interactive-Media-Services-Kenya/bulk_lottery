@@ -52,45 +52,29 @@
                                 <th>Phone</th>
                                 <th>Message</th>
                                 <th>Sender Name</th>
-                                <th>Client</th>
+                                {{-- <th>Client</th> --}}
                                 <th>Delivery Status</th>
-                                {{-- <th>Brand</th> --}}
                                 <th>Date Sent</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($bulkMessages as $item)
                                 <tr>
                                     <td>{{ $item->destination ?? '' }}</td>
-                                    <td>{{ \Str::of($item->message)->words(10, ' ...') ?? '' }}</td>
+                                    <td>{{ \Str::of($item->message)->words(15, ' ...') ?? '' }}</td>
                                     <th>{{ $item->senderName->short_code ?? '' }}</th>
-                                    <td>{{ $item->client->name ?? '' }}</td>
+                                    {{-- <td>{{ $item->client->name ?? '' }}</td> --}}
                                     @if (!empty($item->bulkResponse->bulkStatus->deliverystatus))
                                         @if ($item->bulkResponse->bulkStatus->deliverystatus == 'DeliveredToTerminal')
-                                        <td><a href="#" class="btn btn-sm btn-success">Success</a></td>
+                                        <td class="text-center"><a href="#" class="btn btn-sm btn-success">Success</a></td>
                                         @else
-                                        <td><a href="#" class="btn btn-sm btn-danger">Failed</a></td>
+                                        <td class="text-center"><a href="#" class="btn btn-sm btn-danger">Failed</a></td>
                                         @endif
                                     @else
-                                    <td><a href="#" class="btn btn-sm btn-warning">Pending</a></td>
+                                    <td class="text-center"><a href="#" class="btn btn-sm btn-warning">Pending</a></td>
                                     @endif
                                     {{-- <td>{{ $item->brand->name ?? '' }}</td> --}}
                                     <td>{{ $item->created_at ?? '' }}</td>
-
-                                    <td><a href="{{ route('campaigns.edit', [$item->id]) }}"
-                                            class="btn btn-sm btn-warning"><i class="bi-pencil"></i></a>&nbsp;<a
-                                            class="btn btn-sm btn-danger" href="{{ route('campaigns.index') }}"
-                                            onclick="
-                                return confirm('Are you sure you want to Delete this campaign?');
-                                event.preventDefault();
-                                 document.getElementById(
-                                   'delete-form-{{ $item->id }}').submit();"><i
-                                                class="bi-trash"></i></a></td>
-                                    <form id="delete-form-{{ $item->id }}" +
-                                        action="{{ route('campaigns.destroy', $item->id) }}" method="post">
-                                        @csrf @method('DELETE')
-                                    </form>
                                 </tr>
                             @empty
                             @endforelse
