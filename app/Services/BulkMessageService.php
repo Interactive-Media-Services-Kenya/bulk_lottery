@@ -57,6 +57,7 @@ class BulkMessageService
                 'client_id' =>  $clientID,
                 'message_id'    =>  $messageID,
             ]);
+            return;
         } catch (\Exception $e) {
 
             return redirect()->back()->with("error", $e);

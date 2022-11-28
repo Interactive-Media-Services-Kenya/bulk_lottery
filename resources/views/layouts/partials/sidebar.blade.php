@@ -68,7 +68,8 @@
                         </li>
                     </ul>
                 </li>
-
+                @if (auth()->user()->hasrole('Admin') ||
+                auth()->user()->can('clients_management'))
                 <li class="sidebar-title">Client Management</li>
 
                 <li class="sidebar-item  has-sub">
@@ -94,6 +95,7 @@
                         </li>
                     </ul>
                 </li>
+                @endif
 
                 <li class="sidebar-title">Contacts Management</li>
 

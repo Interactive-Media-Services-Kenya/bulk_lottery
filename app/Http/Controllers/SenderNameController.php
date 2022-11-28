@@ -10,7 +10,7 @@ class SenderNameController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['role:Admin', 'permission:sender_name_management']);
+        $this->middleware(['role_or_permission:Admin|sender_name_management']);
     }
     /**
      * Display a listing of the resource.
