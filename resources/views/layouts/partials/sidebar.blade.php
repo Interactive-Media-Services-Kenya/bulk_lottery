@@ -51,7 +51,8 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
-
+                @if (auth()->user()->hasrole('Admin') ||
+                auth()->user()->can('users_management'))
                 <li class="sidebar-title">User Management</li>
 
                 <li class="sidebar-item  has-sub">
@@ -68,6 +69,7 @@
                         </li>
                     </ul>
                 </li>
+                @endif
                 @if (auth()->user()->hasrole('Admin') ||
                 auth()->user()->can('clients_management'))
                 <li class="sidebar-title">Client Management</li>
