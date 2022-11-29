@@ -127,7 +127,7 @@ class BulkMessageController extends Controller
 
     public function messagePhoneBook()
     {
-        $phoneBooks = PhoneBook::with('contacts')->whereclient_id($this->clientID)->get();
+        $phoneBooks = PhoneBook::with('contacts')->whereclient_id($this->clientID)->cursor();
         $senderNames = SenderName::whereclient_id($this->clientID)->get();
         return view('messages.message.create-phonebook', compact('phoneBooks', 'senderNames'));
     }
