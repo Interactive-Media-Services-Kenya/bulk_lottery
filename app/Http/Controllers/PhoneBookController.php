@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PhoneBook;
 use Illuminate\Http\Request;
 use App\Models\Contact;
+use Yajra\DataTables\Facades\DataTables;
 
 class PhoneBookController extends Controller
 {
@@ -70,9 +71,29 @@ class PhoneBookController extends Controller
      * @param  \App\Models\PhoneBook  $phoneBook
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
         $phoneBook = PhoneBook::findOrFail($id);
+        if ($request->ajax()) {
+            $query = Contact::wherephone_book_id($id);
+
+            $table = Datatables::of($query);
+
+
+            $table->editColumn('name', function ($row) {
+                return $row->name ?? 'No Name';
+            });
+            $table->editColumn('phone', function ($row) {
+                return  substr($row->phone, 0, 5) . '*****' . substr($row->phone, -2)?? '';
+            });
+            $table->editColumn('created_at', function ($row) {
+                return $row->created_at ?? '';
+            });
+
+            $table->rawColumns(['name','phone','created_at']);
+
+            return $table->make(true);
+        }
 
         return view('phonebooks.show', compact('phoneBook'));
     }
