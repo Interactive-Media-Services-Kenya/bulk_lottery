@@ -10,8 +10,9 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 // use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use DB;
+use Maatwebsite\Excel\Concerns\WithBatchInserts;
 
-class ContactImport implements ToCollection,WithHeadingRow, WithChunkReading
+class ContactImport implements ToCollection,WithHeadingRow, WithChunkReading,WithBatchInserts
 {
     public $clientID, $userID;
     protected $phoneBookID;
@@ -43,13 +44,13 @@ class ContactImport implements ToCollection,WithHeadingRow, WithChunkReading
         }
     }
 
-    // public function batchSize(): int
-    // {
-    //     return 1000;
-    // }
+    public function batchSize(): int
+    {
+        return 20000;
+    }
 
     public function chunkSize(): int
     {
-        return 5000;
+        return 20000;
     }
 }

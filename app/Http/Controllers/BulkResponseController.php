@@ -40,30 +40,33 @@ class BulkResponseController extends Controller
             $table->editColumn('message', function ($row) {
                 return \Str::of($row->message)->words(15, ' ...') ?? '' ;
             });
-            $table->editColumn('sender_name', function ($row) {
+            $table->editColumn('senderName', function ($row) {
                 return $row->senderName->short_code ?? 'No Name';
             });
             $table->editColumn('status', function ($row) {
-                if($row->bulkResponse->bulkStatus->deliverystatus == 'DeliveredToTerminal'){
+                if (empty($row->bulkResponse->bulkStatus)) {
+                    return  '<td class="text-center"><a href="#" class="btn btn-sm btn-info">No Status</a></td>';
+                }
+                $status = DB::connection('mysql2')->table('dlr_bulk')->wherecorrelator($row->bulkResponse->correlator)->value('deliverystatus');
+
+                if($status == 'DeliveredToTerminal'){
                     return '<td class="text-center"><a href="#" class="btn btn-sm btn-success">Success</a></td>';
-                }elseif ($row->bulkResponse->bulkStatus->deliverystatus == 'DeliveredToTerminal') {
+                }elseif ($status == 'SenderName Blacklisted'||$status == 'DeliveryImpossible'||$status == 'AbsentSubscriber'||$status == 'InvalidMsisdn') {
                     return '<td class="text-center"><a href="#" class="btn btn-sm btn-danger">Failed</a></td>';
                 }else{
                     return '<td class="text-center"><a href="#" class="btn btn-sm btn-warning">Pending</a></td>';
                 }
-                return $row->bulkResponse->bulkStatus->deliverystatus ?? 'No Name';
             });
             $table->editColumn('created_at', function ($row) {
                 return $row->created_at ?? '';
             });
 
-            $table->rawColumns(['name','phone','created_at']);
+            $table->rawColumns(['message','destination','status','senderName','created_at']);
 
             return $table->make(true);
         }
 
-        // $corelators = BulkResponse::select('correlator')->whereclient_id($this->clientID)->get();
-        // $bulkResponses = BulkStatus::whereIn('correlator', $corelators)->get();
+
 
         return view('messages.message.delivery.index');
     }
