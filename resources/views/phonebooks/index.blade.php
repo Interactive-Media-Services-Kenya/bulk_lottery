@@ -36,7 +36,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Company Name</th>
-                            <th>No. Contacts</th>
+                            {{-- <th>No. Contacts</th> --}}
                             <th>Date Created</th>
                             <th>Actions</th>
                         </tr>
@@ -46,7 +46,7 @@
                         <tr>
                             <td>{{$item->name}}</td>
                             <td>{{$item->client->name}}</td>
-                            <td>{{$item->contacts->count()}}</td>
+                            {{-- <td>{{$item->contacts->count()}}</td> --}}
                             <td>{{$item->created_at}}</td>
                                <td><a href="{{route('phonebooks.show',[$item->id])}}" class="btn btn-sm btn-primary"><i class="bi-eye"></i></a>&nbsp;<a href="{{route('phonebooks.edit',[$item->id])}}" class="btn btn-sm btn-warning"><i class="bi-pencil"></i></a>&nbsp;<a class="btn btn-sm btn-danger" href="{{ route('phonebooks.index') }}"
                                 onclick="

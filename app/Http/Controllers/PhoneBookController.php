@@ -29,7 +29,7 @@ class PhoneBookController extends Controller
     public function index()
     {
 
-        $phoneBooks = PhoneBook::whereclient_id($this->clientID)->get();
+        $phoneBooks = PhoneBook::whereclient_id($this->clientID)->cursor();
 
         return view('phonebooks.index', compact('phoneBooks'));
     }
