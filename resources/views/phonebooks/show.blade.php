@@ -45,7 +45,7 @@
                         @forelse ($phoneBook->contacts as $item)
                         <tr>
                             <td>{{$item->name}}</td>
-                            <td>{{$item->phone}}</td>
+                            <td>{{substr($item->phone, 0, 5) . '*****' . substr($item->phone, -2)}}</td>
                             <td>{{$item->email??'No Email'}}</td>
                             <td>{{$item->created_at}}</td>
                                <td><a href="{{route('contacts.edit',[$item->id])}}" class="btn btn-sm btn-warning"><i class="bi-pencil"></i></a>&nbsp;<a class="btn btn-sm btn-danger" href="{{ route('phonebooks.index') }}"
