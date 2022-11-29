@@ -202,9 +202,10 @@ class ContactController extends Controller
         try {
             Excel::import(new ContactImport($request->phone_book_id), $request->file);
             return redirect()->route('contacts.index');
-        } catch (\Throwable $th) {
-            return back()->with('error', 'Contacts Not Imported To PhoneBook Successfully. Please Check on the Excel Data Imported');
-
+        } catch (\Illuminate\Validation\ValidationException $th) {
+            return back()->with('error', 'Check for Missing Phone Contacts Format in Document. Use Format 2547XXXXXXXX');
+        }catch(\Exception $e){
+            return back()->with('error', 'Contacts Not Imported To PhoneBook. Check Your Document Formating => '.$e);
         }
     }
 }

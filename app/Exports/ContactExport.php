@@ -14,14 +14,14 @@ class ContactExport implements FromCollection,WithHeadings
     public function collection()
     {
         return DB::table('contacts')
-        ->select('name','phone','email')->take(0)->get();
+        ->select('phone','name','email')->take(0)->get();
     }
 
     public function headings(): array
     {
         return [
+            'phone_number',
             'name',
-            'phone',
             'email',
         ];
     }

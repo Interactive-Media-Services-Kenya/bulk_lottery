@@ -3,15 +3,13 @@
 namespace App\Imports;
 
 use App\Models\BulkMessage;
-use Illuminate\Support\Facades\Request;
-use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use DB;
+use Illuminate\Support\Facades\Validator;
 use App\Models\SenderName;
 use App\Models\UserBulkAccount;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
-
+use DB;
 class BulkMessagesImport implements ToCollection,WithHeadingRow
 {
     protected $client_id;
@@ -47,6 +45,9 @@ class BulkMessagesImport implements ToCollection,WithHeadingRow
     public function collection(Collection $rows)
     {
         //get Account Balance
+        Validator::make($rows->toArray(), [
+            'phone_number (2547XXXXXXXX)' => 'required|digits:12',
+        ])->validate();
         $accountBulkBalance = UserBulkAccount::whereclient_id($this->client_id)->value('bulk_balance');
 
         if ($rows->count() > $accountBulkBalance) {
@@ -56,7 +57,7 @@ class BulkMessagesImport implements ToCollection,WithHeadingRow
         {
             $bulkMessage = BulkMessage::create([
                 "message" => $row['message'],
-                "destination" => $row['phone'],
+                "destination" => $row['phone_number (2547XXXXXXXX)'],
                 "brand_id" => $this->brand_id??'',
                 "client_id" => $this->client_id??'',
                 "campaign_id" => $this->campaign_id??'',
@@ -65,7 +66,7 @@ class BulkMessagesImport implements ToCollection,WithHeadingRow
             //Insert Data into Messages Outgoing Into smsservices table
             $senderName = SenderName::whereid($this->sender_id)->value('short_code');
             $message = $row['message'];
-            $phoneNumber = $row['phone'];
+            $phoneNumber = $row['phone_number (2547XXXXXXXX)'];
             $this->bulkMessageService->sendBulk($senderName,$message,$phoneNumber,$this->client_id,$bulkMessage->id);
             // DB::connection('mysql2')->DB::table('messages_outgoing')->insert([
             //     'destination' => $row['phone'],

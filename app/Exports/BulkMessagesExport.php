@@ -21,7 +21,7 @@ class BulkMessagesExport implements FromCollection,WithHeadings
     public function headings(): array
     {
         return [
-            'phone',
+            'phone_number (2547XXXXXXXX)',
             'message',
         ];
     }
