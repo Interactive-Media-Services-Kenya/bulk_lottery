@@ -46,24 +46,22 @@
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table" id="table1">
+                    <table class="table" id="ContactTable">
                         <thead>
                             <tr>
                                 <th>Phone</th>
                                 <th>Message</th>
                                 <th>Sender Name</th>
-                                {{-- <th>Client</th> --}}
                                 <th class="text-center">Delivery Status</th>
                                 <th>Date Sent</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($bulkMessages as $item)
+                            {{-- @forelse($bulkMessages as $item)
                                 <tr>
-                                    <td>{{ $item->destination ?? '' }}</td>
+                                    <td>{{ substr($item->destination, 0, 5) . '*****' . substr($item->destination, -2) ?? '' }}</td>
                                     <td>{{ \Str::of($item->message)->words(15, ' ...') ?? '' }}</td>
                                     <th>{{ $item->senderName->short_code ?? '' }}</th>
-                                    {{-- <td>{{ $item->client->name ?? '' }}</td> --}}
                                     @if (!empty($item->bulkResponse->bulkStatus->deliverystatus))
                                         @if ($item->bulkResponse->bulkStatus->deliverystatus == 'DeliveredToTerminal')
                                         <td class="text-center"><a href="#" class="btn btn-sm btn-success">Success</a></td>
@@ -73,11 +71,10 @@
                                     @else
                                     <td class="text-center"><a href="#" class="btn btn-sm btn-warning">Pending</a></td>
                                     @endif
-                                    {{-- <td>{{ $item->brand->name ?? '' }}</td> --}}
                                     <td>{{ $item->created_at ?? '' }}</td>
                                 </tr>
                             @empty
-                            @endforelse
+                            @endforelse --}}
 
                         </tbody>
                     </table>
@@ -92,6 +89,59 @@
         <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
         <script src="https://cdn.datatables.net/datetime/1.2.0/js/dataTables.dateTime.min.js"></script>
+        <script>
+            $(document).ready(function() {
+            $('#ContactTable').DataTable({
+                processing: true,
+                method: 'GET',
+                serverSide: true,
+                ajax: "{{ route('messages.message.delivery.index') }}",
+                columns: [{
+                        data: 'destination',
+                        name: 'destination'
+                    },
+                    {
+                        data: 'senderName.short_code',
+                        name: 'sender_name'
+                    },
+                    {
+                        data: 'message',
+                        name: 'message'
+                    },
+                    {
+                        data: 'status',
+                        name: 'bulkResponse.bulkStatus.deliverystatus'
+                    },
+                    {
+                        data: 'created_at',
+                        name: 'created_at'
+                    },
+                ],
+                dom: 'lBfrtip',
+                pageLength: 100,
+                buttons: [
+                    'copy',
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Contact_list',
+                        exportOptions: {
+                            exportOptions: {
+                                columns: [0, 1, 2, ':visible']
+                            }
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Contact_list',
+                        exportOptions: {
+                            columns: [0, 1, 2]
+                        }
+                    },
+                    'colvis'
+                ]
+            });
+        });
+        </script>
         <script>
             var minDate, maxDate;
 
@@ -124,7 +174,7 @@
                 });
 
                 // DataTables initialisation
-                var table = $('#table1').DataTable();
+                var table = $('#ContactTable').DataTable();
 
                 // Refilter the table
                 $('#min, #max').on('change', function() {

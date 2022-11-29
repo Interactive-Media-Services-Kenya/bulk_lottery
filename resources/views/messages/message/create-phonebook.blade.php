@@ -49,8 +49,7 @@
                                                         required>
                                                         <option selected value="">Select PhoneBook</option>
                                                         @forelse ($phoneBooks as $phoneBook)
-                                                            <option value="{{ $phoneBook->id }}">{{ $phoneBook->name }} --
-                                                                {{ $phoneBook->contacts->count() }} Contact(s)</option>
+                                                            <option value="{{ $phoneBook->id }}">{{ $phoneBook->name }}</option>
                                                         @empty
                                                             <option deselected>No Registred PhoneBook with Contacts</option>
                                                         @endforelse
