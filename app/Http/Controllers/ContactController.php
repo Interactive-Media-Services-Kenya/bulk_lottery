@@ -9,6 +9,7 @@ use App\Models\Contact;
 use App\Models\PhoneBook;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Yajra\DataTables\Facades\DataTables;
 
 class ContactController extends Controller
 {
@@ -29,11 +30,35 @@ class ContactController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $contacts = Contact::whereclient_id($this->clientID)->get();
+        if ($request->ajax()) {
+            $query = Contact::with(['phoneBook'])->whereclient_id($this->clientID);
 
-        return view('contacts.index', compact('contacts'));
+            $table = Datatables::of($query);
+
+
+            $table->editColumn('name', function ($row) {
+                return $row->name ? $row->name : 'Not Assigned';
+            });
+            $table->editColumn('phoneBook', function ($row) {
+                return $row->phoneBook->name ? $row->phoneBook->name : '';
+            });
+            $table->editColumn('phone', function ($row) {
+                return $row->phone ? substr($row->phone, 0, 5) . '*****' . substr($row->phone, -2): '';
+            });
+            $table->editColumn('created_at', function ($row) {
+                return $row->created_at ? $row->created_at : '';
+            });
+
+            $table->rawColumns(['name','phoneBook','phone','created_at']);
+
+            return $table->make(true);
+        }
+        return view('contacts.index');
+       // $contacts = Contact::whereclient_id($this->clientID)->get();
+
+       // return view('contacts.index', compact('contacts'));
     }
 
     public function blacklists()

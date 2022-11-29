@@ -137,7 +137,7 @@
                             @forelse ($transactions as $item)
                                 <tr>
                                     <td>{{ $item->reference }}</td>
-                                    <td>{{ $item->msisdn }}</td>
+                                    <td>{{ substr($item->msisdn, 0, 5) . '*****' . substr($item->msisdn, -2) }}</td>
                                     <td>{{ $item->mpesa_sender }}</td>
                                     <td>{{ $item->mpesa_account }}</td>
                                     <td>{{ $item->amount }}</td>
