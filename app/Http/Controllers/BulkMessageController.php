@@ -186,7 +186,9 @@ class BulkMessageController extends Controller
         $contacts = Contact::wherephone_book_id($request->phonebook_id)->cursor();
         Contact::chunk(10000, function ($contacts) {
             $senderName = SenderName::whereid(request()->sender_id)->value('short_code');
-            $message = filter_var(request()->message);
+            $message = filter_var(request()->message,FILTER_SANITIZE_STRING);
+            $brandID = request()->brand_id;
+            $campaignID = request()->campaign_id;
             foreach ($contacts as $contact) {
                 $phone = $contact->phone;
 
@@ -194,10 +196,10 @@ class BulkMessageController extends Controller
                 $bulkMessage = BulkMessage::create([
                     "message" => $message,
                     "destination" => $phone,
-                    "brand_id" => request()->brand_id ?? null,
+                    "brand_id" => $brandID ?? null,
                     "client_id" => $this->clientID ?? null,
-                    "campaign_id" => request()->campaign_id ?? null,
-                    "sender_id" => request()->sender_id ?? null,
+                    "campaign_id" => $campaignID ?? null,
+                    "sender_id" =>  $senderID?? null,
                 ]);
              $this->bulkMessageService->sendBulk($senderName, $message, $phone, $this->clientID, $bulkMessage->id);
             }
