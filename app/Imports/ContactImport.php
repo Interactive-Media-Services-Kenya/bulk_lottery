@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 // use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use DB;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 
 class ContactImport implements ToCollection,WithHeadingRow, WithChunkReading,WithBatchInserts
@@ -33,13 +34,15 @@ class ContactImport implements ToCollection,WithHeadingRow, WithChunkReading,Wit
         // ])->validate();
 
         foreach ($rows as $row) {
-            Contact::create([
+            Contact::insert([
                 'name' => $row['name']??'No Name',
                 'email' => $row['email']??'No Email',
                 'phone' => $row['phone_number'],
                 'user_id' => $this->userID??null,
                 'phone_book_id'=> $this->phoneBookID??null,
                 'client_id' => $this->clientID??null,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ]);
         }
     }
