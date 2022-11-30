@@ -171,6 +171,12 @@ class BulkMessageController extends Controller
         if ($contacts->count() == 0) {
             return back()->with('error', 'PhoneBook has No Contacts');
         }
+        //Check For User Account Balance
+        $accountBulkBalance = UserBulkAccount::whereclient_id($this->clientID)->value('bulk_balance');
+
+        if ($contacts->count() > $accountBulkBalance) {
+            return back()->with('error', 'Insufficient Bulk Units! Kindly Topup Your Bulk Balance to Continue');
+        }
         $message = filter_var($request->message, FILTER_SANITIZE_STRING);
         DB::beginTransaction();
         $senderName = SenderName::whereid($request->sender_id)->value('short_code');
