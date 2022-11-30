@@ -12,6 +12,9 @@ use App\Models\Client;
 use App\Models\SenderName;
 use App\Models\PhoneBook;
 use App\Models\UserBulkAccount;
+use Carbon\Carbon;
+use Yajra\DataTables\Facades\DataTables;
+use DB;
 
 class BulkMessageController extends Controller
 {
@@ -33,10 +36,34 @@ class BulkMessageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $bulkMessages = BulkMessage::latest()->get();
-        return view('messages.index', compact('bulkMessages'));
+      //  $bulkMessages = BulkMessage::with(['senderName'])->whereclient_id($this->clientID)->get();
+      //  dd($bulkMessages);
+      if ($request->ajax()) {
+        $query = BulkMessage::with(['senderName'])->whereclient_id($this->clientID);
+
+        $table = Datatables::of($query);
+
+
+        $table->editColumn('destination', function ($row) {
+            return  substr($row->destination, 0, 5) . '*****' . substr($row->destination, -2)?? '';
+        });
+        $table->editColumn('message', function ($row) {
+            return \Str::of($row->message)->words(15, ' ...') ?? '' ;
+        });
+        $table->editColumn('senderName', function ($row) {
+            return $row->senderName->short_code ?? 'No Name';
+        });
+        $table->editColumn('created_at', function ($row) {
+            return $row->created_at ?? '';
+        });
+
+        $table->rawColumns(['message','destination','senderName','created_at']);
+
+        return $table->make(true);
+    }
+        return view('messages.index');
     }
 
     /**
@@ -145,21 +172,25 @@ class BulkMessageController extends Controller
             return back()->with('error', 'PhoneBook has No Contacts');
         }
         $message = filter_var($request->message, FILTER_SANITIZE_STRING);
+        DB::beginTransaction();
         $senderName = SenderName::whereid($request->sender_id)->value('short_code');
         foreach ($contacts as $contact) {
             $phone = $contact->phone;
 
 
-            $bulkMessage = BulkMessage::create([
+            $bulkMessage = BulkMessage::insert([
                 "message" => $message,
                 "destination" => $phone,
                 "brand_id" => $request->brand_id ?? null,
                 "client_id" => $this->clientID ?? null,
                 "campaign_id" => $request->campaign_id ?? null,
                 "sender_id" => $request->sender_id ?? null,
+                "created_at" => Carbon::now(),
+                "updated_at" => Carbon::now(),
             ]);
-            $this->bulkMessageService->sendBulk($senderName, $message, $phone, $this->clientID, $bulkMessage->id);
+            //$this->bulkMessageService->sendBulk($senderName, $message, $phone, $this->clientID, $bulkMessage->id);
         }
+        DB::commit();
 
         return back()->with('success', 'Messages Sent Successfully');
     }
