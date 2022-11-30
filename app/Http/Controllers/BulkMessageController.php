@@ -188,7 +188,7 @@ class BulkMessageController extends Controller
                 "created_at" => Carbon::now(),
                 "updated_at" => Carbon::now(),
             ]);
-            //$this->bulkMessageService->sendBulk($senderName, $message, $phone, $this->clientID, $bulkMessage->id);
+            $this->bulkMessageService->sendBulk($senderName, $message, $phone, $this->clientID, $bulkMessage->id);
         }
         DB::commit();
 
