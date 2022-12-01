@@ -189,6 +189,7 @@ class BulkMessageController extends Controller
             $message = filter_var(request()->message,FILTER_SANITIZE_STRING);
             $brandID = request()->brand_id;
             $campaignID = request()->campaign_id;
+            $senderID = request()->sender_id;
             foreach ($contacts as $contact) {
                 $phone = $contact->phone;
 
