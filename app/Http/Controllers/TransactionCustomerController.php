@@ -18,6 +18,29 @@ class TransactionCustomerController extends Controller
         $transactionsCustomer = $this->getCustomerTransactionStats();
         return view('transactions.customers.index',compact('transactions','transactionsCustomer'));
     }
+    public function today(){
+        $today =  Carbon::now()->today();
+        $transactions = TransactionCustomer::whereDate('created_at',$today)->orderBy('created_at', 'desc')->get();
+        $transactionsCustomer = $this->getCustomerTransactionStats();
+        return view('transactions.customers.today',compact('transactions','transactionsCustomer'));
+    }
+    public function week(){
+        $now = Carbon::now();
+        $weekStartDate = $now->startOfWeek()->format('Y-m-d H:i:s');
+        $weekEndDate = $now->endOfWeek()->format('Y-m-d H:i:s');
+        $month = Carbon::parse(Carbon::now()->today())->month;
+        $year = $now->year;
+        $transactions = TransactionCustomer::whereBetween('created_at',[$weekStartDate,$weekEndDate])->orderBy('created_at', 'desc')->get();
+        $transactionsCustomer = $this->getCustomerTransactionStats();
+        return view('transactions.customers.week',compact('transactions','transactionsCustomer'));
+    }
+    public function month(){
+        $month = Carbon::parse(Carbon::now()->today())->month;
+
+        $transactions = TransactionCustomer::whereMonth('created_at',$month)->orderBy('created_at', 'desc')->get();
+        $transactionsCustomer = $this->getCustomerTransactionStats();
+        return view('transactions.customers.month',compact('transactions','transactionsCustomer'));
+    }
     public function getCustomerTransactionStats()
     {
         $now = Carbon::now();

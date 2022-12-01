@@ -108,6 +108,9 @@ Route::group(['middleware' => ['auth:web','otp','user_first_login','user_has_cli
 
     //Customer Transactions
     Route::get('transactions/customers/index',[TransactionCustomerController::class,'index'])->name('transactions.customers.index');
+    Route::get('transactions/customers/today',[TransactionCustomerController::class,'today'])->name('transactions.customers.today');
+    Route::get('transactions/customers/week',[TransactionCustomerController::class,'week'])->name('transactions.customers.week');
+    Route::get('transactions/customers/month',[TransactionCustomerController::class,'month'])->name('transactions.customers.month');
 
     //Contacts & PhoneBook
     Route::get('contacts/phonebook/import/create',[ContactController::class,'createImportPhoneBook'])->name('contacts.phonebook.import.create');

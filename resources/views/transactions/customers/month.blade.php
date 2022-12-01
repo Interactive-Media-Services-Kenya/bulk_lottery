@@ -11,7 +11,7 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">
-                    <h3>All Customer Transactions</h3>
+                    <h3>Month Customer Transactions</h3>
                     <p class="text-subtitle text-muted">Click on Transaction Name to View Entire Details</p>
                 </div>
                 <div class="col-12 col-md-6 order-md-2 order-first">
@@ -55,7 +55,7 @@
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                         <h6 class="text-muted font-semibold">Today Transactions</h6>
-                                        <a href="{{route('transactions.customers.today')}}"><h6 class="font-extrabold mb-0">KES {{ $transactionsCustomer['transactionsToday'] }}
+                                        <a href="{{route('transactions.customers.index')}}"><h6 class="font-extrabold mb-0">KES {{ $transactionsCustomer['transactionsToday'] }}
                                         </h6></a>
                                     </div>
                                 </div>
