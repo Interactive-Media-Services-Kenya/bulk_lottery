@@ -79,6 +79,7 @@ Route::group(['middleware' => ['auth:web','otp','user_first_login','user_has_cli
     Route::get('messages/{id}/edit',[BulkMessageController::class, 'edit'])->name('messages.edit');
     Route::get('export/get-bulk-messages-excel',[BulkMessageController::class, 'export'])->name('export.get-bulk-messages-excel');
     Route::get('messages',[BulkMessageController::class, 'index'])->name('messages.index');
+    Route::get('messages/today',[BulkMessageController::class, 'today'])->name('messages.today');
     Route::get('messages/create',[BulkMessageController::class, 'create'])->name('messages.create');
 
 

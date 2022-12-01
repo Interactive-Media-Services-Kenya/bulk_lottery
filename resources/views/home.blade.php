@@ -56,9 +56,9 @@
                                         </div>
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                        <h6 class="text-muted font-semibold">Total Transactions</h6>
-                                        <a href="{{ route('transactions.index') }}">
-                                            <h6 class="font-extrabold mb-0">KES {{ $dashboardStats['totalTransactions'] }}
+                                        <h6 class="text-muted font-semibold">Messages Today</h6>
+                                        <a href="{{ route('messages.today') }}">
+                                            <h6 class="font-extrabold mb-0"> {{ $dashboardStats['messagesToday'] }}
                                             </h6>
                                         </a>
                                     </div>

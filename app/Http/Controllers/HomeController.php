@@ -47,14 +47,17 @@ class HomeController extends Controller
 
     public function getDashboardStats()
     {
+        $today =  Carbon::now()->today();
         $transactions = DB::table('transactions')->whereclient_id($this->clientID)->count();
         $messages = DB::table('bulk_messages')->whereclient_id($this->clientID)->count();
+        $messagesToday = DB::table('bulk_messages')->whereclient_id($this->clientID)->whereDate('created_at',$today)->count();
         $uniqueNumbers = collect(Contact::select('phone')->whereclient_id($this->clientID)->cursor())->count();
         $accountBalance = UserBulkAccount::whereclient_id($this->clientID)->value('bulk_balance') ?? 0.00;
         $totalTransactions = DB::table('transactions')->whereclient_id($this->clientID)->sum('amount');
         $statistics = [
             'transactions' => $transactions,
             'messages' => $messages,
+            'messagesToday' => $messagesToday,
             'uniqueNumbers' => $uniqueNumbers,
             'accountBalance' => $accountBalance,
             'totalTransactions' => $totalTransactions,

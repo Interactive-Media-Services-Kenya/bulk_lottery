@@ -67,6 +67,37 @@ class BulkMessageController extends Controller
         return view('messages.index');
     }
 
+    public function today(Request $request)
+    {
+        //  $bulkMessages = BulkMessage::with(['senderName'])->whereclient_id($this->clientID)->get();
+        //  dd($bulkMessages);
+        if ($request->ajax()) {
+            $today =  Carbon::now()->today();
+            $query = BulkMessage::with(['senderName'])->whereclient_id($this->clientID)->whereDate('created_at',$today);
+
+            $table = Datatables::of($query);
+
+
+            $table->editColumn('destination', function ($row) {
+                return  substr($row->destination, 0, 5) . '*****' . substr($row->destination, -2) ?? '';
+            });
+            $table->editColumn('message', function ($row) {
+                return \Str::of($row->message)->words(15, ' ...') ?? '';
+            });
+            $table->editColumn('senderName', function ($row) {
+                return $row->senderName->short_code ?? 'No Name';
+            });
+            $table->editColumn('created_at', function ($row) {
+                return $row->created_at ?? '';
+            });
+
+            $table->rawColumns(['message', 'destination', 'senderName', 'created_at']);
+
+            return $table->make(true);
+        }
+        return view('messages.today');
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -202,7 +233,7 @@ class BulkMessageController extends Controller
                     "campaign_id" => $campaignID ?? null,
                     "sender_id" =>  $senderID ?? null,
                 ]);
-                $this->bulkMessageService->sendBulk($senderName, $message, $phone, $this->clientID, $bulkMessage->id);
+                //$this->bulkMessageService->sendBulk($senderName, $message, $phone, $this->clientID, $bulkMessage->id);
             }
         });
         // bulk Account Balance
