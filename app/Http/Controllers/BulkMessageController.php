@@ -184,7 +184,7 @@ class BulkMessageController extends Controller
         $message = filter_var($request->message, FILTER_SANITIZE_STRING);
         $senderName = SenderName::whereid($request->sender_id)->value('short_code');
         $contacts = Contact::wherephone_book_id($request->phonebook_id)->cursor();
-        Contact::chunk(10000, function ($contacts) {
+        Contact::wherephone_book_id($request->phonebook_id)->chunk(10000, function ($contacts) {
             $senderName = SenderName::whereid(request()->sender_id)->value('short_code');
             $message = filter_var(request()->message, FILTER_SANITIZE_STRING);
             $brandID = request()->brand_id;
