@@ -44,9 +44,9 @@ class BulkResponseController extends Controller
                 return $row->senderName->short_code ?? 'No Name';
             });
             $table->editColumn('status', function ($row) {
-                if (empty($row->bulkResponse->bulkStatus)) {
-                    return  '<td class="text-center"><a href="#" class="btn btn-sm btn-info">No Status</a></td>';
-                }
+                // if (empty($row->bulkResponse->bulkStatus)) {
+                //     return  '<td class="text-center"><a href="#" class="btn btn-sm btn-info">No Status</a></td>';
+                // }
                 $status = DB::connection('mysql2')->table('dlr_bulk')->wherecorrelator($row->bulkResponse->correlator)->value('deliverystatus');
 
                 if($status == 'DeliveredToTerminal'){
