@@ -188,6 +188,7 @@
         <script>
             $(document).ready(function() {
                 $('#TransactionTable').DataTable({
+                    ordering: false,
                     processing: true,
                     method: 'GET',
                     serverSide: true,
