@@ -186,7 +186,7 @@ class BulkMessageController extends Controller
         $contacts = Contact::wherephone_book_id($request->phonebook_id)->cursor();
         Contact::chunk(10000, function ($contacts) {
             $senderName = SenderName::whereid(request()->sender_id)->value('short_code');
-            $message = filter_var(request()->message,FILTER_SANITIZE_STRING);
+            $message = filter_var(request()->message, FILTER_SANITIZE_STRING);
             $brandID = request()->brand_id;
             $campaignID = request()->campaign_id;
             $senderID = request()->sender_id;
@@ -200,14 +200,17 @@ class BulkMessageController extends Controller
                     "brand_id" => $brandID ?? null,
                     "client_id" => $this->clientID ?? null,
                     "campaign_id" => $campaignID ?? null,
-                    "sender_id" =>  $senderID?? null,
+                    "sender_id" =>  $senderID ?? null,
                 ]);
-             $this->bulkMessageService->sendBulk($senderName, $message, $phone, $this->clientID, $bulkMessage->id);
+                $this->bulkMessageService->sendBulk($senderName, $message, $phone, $this->clientID, $bulkMessage->id);
             }
         });
-        DB::commit();
+        // bulk Account Balance
+        $balance = $accountBulkBalance - $contactsCount;
+        UserBulkAccount::whereclient_id($this->clientID)->update(['bulk_balance' => $balance]);
 
-        return back()->with('success', 'Messages Sent Successfully');
+        DB::commit();
+        return back()->with('success', 'Message Sent Successfully');
     }
 
     public function createQuicksend()
