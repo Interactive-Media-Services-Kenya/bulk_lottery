@@ -231,7 +231,7 @@ class BulkMessageController extends Controller
                     "campaign_id" => $campaignID ?? null,
                     "sender_id" =>  $senderID ?? null,
                 ]);
-               // $this->bulkMessageService->sendBulk($senderName, $message, $phone, $this->clientID, $bulkMessage->id);
+                $this->bulkMessageService->sendBulk($senderName, $message, $phone, $this->clientID, $bulkMessage->id);
             }
         });
         // bulk Account Balance
