@@ -135,21 +135,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @forelse ($transactions as $item)
-                                <tr>
-                                    <td>{{ $item->reference }}</td>
-                                    <td>{{ substr($item->msisdn, 0, 5) . '*****' . substr($item->msisdn, -2) }}</td>
-                                    <td>{{ $item->mpesa_sender }}</td>
-                                    <td>{{ $item->mpesa_account }}</td>
-                                    <td>{{ $item->amount }}</td>
-                                    <td>{{ $item->created_at }}</td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="text-center">No Transactions</td>
-                                </tr>
-                            @endforelse --}}
-
                         </tbody>
                     </table>
                 </div>
@@ -188,6 +173,7 @@
         <script>
             $(document).ready(function() {
                 $('#TransactionTable').DataTable({
+                    aaSorting: [[5, "desc"]],
                     processing: true,
                     method: 'GET',
                     serverSide: true,

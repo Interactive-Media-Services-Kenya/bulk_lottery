@@ -188,12 +188,13 @@
         <script>
             $(document).ready(function() {
                 $('#TransactionTable').DataTable({
-                    "order": [[ 5, "desc" ]] ,
+                    aaSorting: [[5, "desc"]],
                     processing: true,
                     method: 'GET',
                     serverSide: true,
                     ajax: "{{ route('transactions.customers.index') }}",
-                    columns: [{
+                    columns: [
+                        {
                             data: 'reference',
                             name: 'reference'
                         },

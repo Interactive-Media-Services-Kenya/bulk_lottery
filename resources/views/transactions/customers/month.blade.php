@@ -189,6 +189,7 @@
         <script>
             $(document).ready(function() {
                 $('#TransactionTable').DataTable({
+                    aaSorting: [[5, "desc"]],
                     processing: true,
                     method: 'GET',
                     serverSide: true,

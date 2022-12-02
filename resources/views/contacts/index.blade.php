@@ -85,9 +85,11 @@
                 $('#ContactTable').DataTable({
                     processing: true,
                     method: 'GET',
+                    aaSorting: [[3, "desc"]],
                     serverSide: true,
                     ajax: "{{ route('contacts.index') }}",
-                    columns: [{
+                    columns: [
+                        {
                             data: 'name',
                             name: 'name'
                         },

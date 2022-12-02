@@ -44,31 +44,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @forelse ($phoneBook->contacts as $item)
-                        <tr>
-                            <td>{{$item->name}}</td>
-                            <td>{{substr($item->phone, 0, 5) . '*****' . substr($item->phone, -2)}}</td>
-                            <td>{{$item->email??'No Email'}}</td>
-                            <td>{{$item->created_at}}</td>
-                               <td><a href="{{route('contacts.edit',[$item->id])}}" class="btn btn-sm btn-warning"><i class="bi-pencil"></i></a>&nbsp;<a class="btn btn-sm btn-danger" href="{{ route('phonebooks.index') }}"
-                                onclick="
-                                confirm('Are you sure you want to Delete this Contact?');
-                                event.preventDefault();
-                                 document.getElementById(
-                                   'delete-form-{{$item->id}}').submit();"><i class="bi-trash"></i></a></td>
-                               <form id="delete-form-{{$item->id}}"
-                                + action="{{route('contacts.destroy', $item->id)}}"
-                                method="post">
-                              @csrf @method('DELETE')
-                          </form></tr>
-                        @empty
-                        <tr>
-                            <td colspan="5">
-                                <p class="text-center lead">No Contacts In Phone Book! Click <a href="{{route('contacts.create')}}">here</a> to add contacts</p>
-                            </td>
-                        </tr>
-                        @endforelse --}}
-
                         </tbody>
                     </table>
                 </div>
@@ -108,6 +83,7 @@
             $(document).ready(function() {
                 $('#ContactTable').DataTable({
                     processing: true,
+                    aaSorting: [[2, "desc"]],
                     method: 'GET',
                     serverSide: true,
                     ajax: "{{ route('phonebooks.show', [$phoneBook->id]) }}",

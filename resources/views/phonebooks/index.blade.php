@@ -103,6 +103,7 @@
 <script>
     $(document).ready(function() {
         $('#PhoneBookTable').DataTable({
+            aaSorting: [[3, "desc"]],
             processing: true,
             method: 'GET',
             serverSide: true,
