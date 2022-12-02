@@ -95,6 +95,7 @@
         <script>
             $(document).ready(function() {
                 $('#ContactTable').DataTable({
+                    aaSorting: [[4, "desc"]],
                     processing: true,
                     method: 'GET',
                     serverSide: true,
