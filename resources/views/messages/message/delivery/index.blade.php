@@ -105,13 +105,13 @@
                         [4, "desc"]
                     ],
                     processing: true,
-                    // method: 'POST',
+                    method: 'GET',
                     serverSide: true,
-                    ajax: {
-                        url: '{{ route('messages.message.delivery.index.data') }}',
-                        type: 'POST',
-                    },
-                    // ajax: "{{ route('messages.message.delivery.index.data') }}",
+                    // ajax: {
+                    //     url: '{{ route('messages.message.delivery.index.data') }}',
+                    //     type: 'POST',
+                    // },
+                    ajax: "{{ route('messages.message.delivery.index') }}",
                     columns: [{
                             data: 'destination',
                             name: 'destination'
