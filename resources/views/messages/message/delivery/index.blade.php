@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="{{ asset('assets/css/pages/datatables.css') }}">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/datetime/1.2.0/css/dataTables.dateTime.min.css">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('content')
     <div class="page-heading">
@@ -95,22 +94,11 @@
         <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.colVis.min.js"></script>
         <script>
             $(document).ready(function() {
-                $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
                 $('#ContactTable').DataTable({
-                    aaSorting: [
-                        [4, "desc"]
-                    ],
+                    aaSorting: [[4, "desc"]],
                     processing: true,
                     method: 'GET',
                     serverSide: true,
-                    // ajax: {
-                    //     url: '{{ route('messages.message.delivery.index.data') }}',
-                    //     type: 'POST',
-                    // },
                     ajax: "{{ route('messages.message.delivery.index') }}",
                     columns: [{
                             data: 'destination',
