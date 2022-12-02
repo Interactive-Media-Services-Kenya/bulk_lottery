@@ -212,10 +212,8 @@ class BulkMessageController extends Controller
         }
 
         DB::beginTransaction();
-        $message = filter_var($request->message, FILTER_SANITIZE_STRING);
-        $senderName = SenderName::whereid($request->sender_id)->value('short_code');
-        $contacts = Contact::wherephone_book_id($request->phonebook_id)->cursor();
-        Contact::wherephone_book_id($request->phonebook_id)->chunk(10000, function ($contacts) {
+
+        Contact::wherephone_book_id($request->phonebook_id)->chunkById(10000, function ($contacts) {
             $senderName = SenderName::whereid(request()->sender_id)->value('short_code');
             $message = filter_var(request()->message, FILTER_SANITIZE_STRING);
             $brandID = request()->brand_id;
@@ -233,7 +231,7 @@ class BulkMessageController extends Controller
                     "campaign_id" => $campaignID ?? null,
                     "sender_id" =>  $senderID ?? null,
                 ]);
-                $this->bulkMessageService->sendBulk($senderName, $message, $phone, $this->clientID, $bulkMessage->id);
+               // $this->bulkMessageService->sendBulk($senderName, $message, $phone, $this->clientID, $bulkMessage->id);
             }
         });
         // bulk Account Balance

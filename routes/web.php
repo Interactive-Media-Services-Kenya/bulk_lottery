@@ -92,6 +92,7 @@ Route::group(['middleware' => ['auth:web','otp','user_first_login','user_has_cli
     Route::get('messages/phonebook/message/create',[BulkMessageController::class, 'messagePhoneBook'])->name('messages.message.phonebook.create');
     Route::post('messages/phonebook/message/create',[BulkMessageController::class, 'storeMessagePhoneBook'])->name('messages.message.phonebook.store');
     Route::get('messages/message/delivery/index',[BulkResponseController::class,'index'])->name('messages.message.delivery.index');
+    Route::post('messages/message/delivery/index/data',[BulkResponseController::class,'indexData'])->name('messages.message.delivery.index.data');
 
     //Sender Names
     Route::get('sendernames',[SenderNameController::class,'index'])->name('sendernames.index');
