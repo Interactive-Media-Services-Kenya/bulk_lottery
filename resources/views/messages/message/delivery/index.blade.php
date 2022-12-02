@@ -75,6 +75,7 @@
                     ],
                     processing: true,
                     method: 'GET',
+                    timeout: 600000,
                     serverSide: true,
                     ajax: "{{ route('messages.message.delivery.index') }}",
                     columns: [{
