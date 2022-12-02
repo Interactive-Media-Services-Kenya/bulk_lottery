@@ -41,33 +41,10 @@
                                 <th>PhoneBook</th>
                                 <th>Phone Number</th>
                                 <th>Date Created</th>
-                                {{-- <th>Actions</th> --}}
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @forelse ($contacts as $item)
-                        <tr>
-                            <td>{{$item->name}}</td>
-                            <td>{{$item->phoneBook->name??'Not In Any PhoneBook'}}</td>
-                            <td>{{ substr($item->phone, 0, 5) . '*****' . substr($item->phone, -2)}}</td>
-                            <td>{{$item->created_at}}</td>
-                               <td><a href="{{route('contacts.show',[$item->id])}}" class="btn btn-sm btn-primary"><i class="bi-eye"></i></a>&nbsp;<a href="{{route('contacts.edit',[$item->id])}}" class="btn btn-sm btn-warning"><i class="bi-pencil"></i></a>&nbsp;<a class="btn btn-sm btn-danger" href="{{ route('contacts.index') }}"
-                                onclick="
-                                confirm('Are you sure you want to Delete this Contact?');
-                                event.preventDefault();
-                                 document.getElementById(
-                                   'delete-form-{{$item->id}}').submit();"><i class="bi-trash"></i></a></td>
-                               <form id="delete-form-{{$item->id}}"
-                                + action="{{route('contacts.destroy', $item->id)}}"
-                                method="post">
-                              @csrf @method('DELETE')
-                          </form></tr>
-                        @empty
-                        <tr>
-                            <td colspan="5" class="text-center lead">No Contacts Added</td>
-                        </tr>
-                        @endforelse --}}
-
                         </tbody>
                     </table>
                 </div>
@@ -126,6 +103,10 @@
                         {
                             data: 'created_at',
                             name: 'created_at'
+                        },
+                        {
+                            data: 'actions',
+                            name: 'actions'
                         },
                     ],
                     dom: 'lBfrtip',

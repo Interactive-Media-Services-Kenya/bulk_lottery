@@ -37,7 +37,6 @@ class ContactController extends Controller
 
             $table = Datatables::of($query);
 
-
             $table->editColumn('name', function ($row) {
                 return $row->name ? $row->name : 'Not Assigned';
             });
@@ -45,20 +44,35 @@ class ContactController extends Controller
                 return $row->phoneBook->name ? $row->phoneBook->name : '';
             });
             $table->editColumn('phone', function ($row) {
-                return $row->phone ? substr($row->phone, 0, 5) . '*****' . substr($row->phone, -2): '';
+                return $row->phone ? substr($row->phone, 0, 5) . '*****' . substr($row->phone, -2) : '';
             });
             $table->editColumn('created_at', function ($row) {
                 return $row->created_at ? $row->created_at : '';
             });
+            $table->addColumn('actions', '&nbsp;');
+            $table->editColumn('actions', function ($row) {
+                $view = 0;
+                $edit = 0;
+                $delete = 1;
+                $routePart = 'contacts';
 
-            $table->rawColumns(['name','phoneBook','phone','created_at']);
+                return view('layouts.partials.utilities.datatablesActions', compact(
+                    'view',
+                    'edit',
+                    'delete',
+                    'routePart',
+                    'row'
+                ));
+            });
+
+            $table->rawColumns(['name', 'phoneBook', 'phone', 'created_at', 'actions']);
 
             return $table->make(true);
         }
         return view('contacts.index');
-       // $contacts = Contact::whereclient_id($this->clientID)->get();
+        // $contacts = Contact::whereclient_id($this->clientID)->get();
 
-       // return view('contacts.index', compact('contacts'));
+        // return view('contacts.index', compact('contacts'));
     }
 
     public function blacklists()
@@ -68,7 +82,8 @@ class ContactController extends Controller
         return view('contacts.blacklists.index', compact('contacts'));
     }
 
-    public function createBlacklists(){
+    public function createBlacklists()
+    {
         return view('contacts.blacklists.create');
     }
 
@@ -86,23 +101,23 @@ class ContactController extends Controller
                 'client_id' => $this->clientID,
                 'contact_id' => $contact->id,
             ]);
-
         } else {
             Blacklist::create([
                 'phone' => $request->phone,
-                'client_id' => $this->clientID??null,
+                'client_id' => $this->clientID ?? null,
             ]);
         }
 
-        return redirect()->route('contacts.blacklists.index')->with('success','Contact Added to Blacklist');
+        return redirect()->route('contacts.blacklists.index')->with('success', 'Contact Added to Blacklist');
     }
 
-    public function destroyBlacklists($id){
+    public function destroyBlacklists($id)
+    {
         $blacklist = Blacklist::findOrFail($id);
 
         $blacklist->delete();
 
-        return redirect()->route('contacts.blacklists.index')->with('success','Contact Deleted from Blacklist');
+        return redirect()->route('contacts.blacklists.index')->with('success', 'Contact Deleted from Blacklist');
     }
 
     /**
@@ -209,17 +224,20 @@ class ContactController extends Controller
 
 
     //Get PhoneBook Smple Import FIle
-    public function getImportPhoneBook(){
+    public function getImportPhoneBook()
+    {
         return Excel::download(new ContactExport, 'importPhoneBookContacts.xlsx');
     }
 
-    public function createImportPhoneBook(){
+    public function createImportPhoneBook()
+    {
         $phoneBooks = PhoneBook::whereclient_id($this->clientID)->get();
 
         return view('contacts.imports.create', compact('phoneBooks'));
     }
 
-    public function storeImportPhoneBook(Request $request){
+    public function storeImportPhoneBook(Request $request)
+    {
         $this->validate($request, [
             'phone_book_id' => 'required|integer',
         ]);
@@ -229,8 +247,8 @@ class ContactController extends Controller
             return redirect()->route('contacts.index');
         } catch (\Illuminate\Validation\ValidationException $th) {
             return back()->with('error', 'Check for Missing Phone Contacts Format in Document. Use Format 2547XXXXXXXX');
-        }catch(\Exception $e){
-            return back()->with('error', 'Contacts Not Imported To PhoneBook. Check Your Document Formating => '.$e);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Contacts Not Imported To PhoneBook. Check Your Document Formating => ' . $e);
         }
     }
 }

@@ -40,6 +40,7 @@
                                 <th>Name</th>
                                 <th>Phone</th>
                                 <th>Date Created</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -121,6 +122,10 @@
                         {
                             data: 'created_at',
                             name: 'created_at'
+                        },
+                        {
+                            data: 'actions',
+                            name: 'actions'
                         },
                     ],
                     dom: 'lBfrtip',

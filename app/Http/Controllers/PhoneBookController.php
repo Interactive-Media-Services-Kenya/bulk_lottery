@@ -26,11 +26,49 @@ class PhoneBookController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
 
-        $phoneBooks = PhoneBook::whereclient_id($this->clientID)->cursor();
+        $phoneBooks = PhoneBook::withCount(['contacts','client'])->whereclient_id($this->clientID)->cursor();
+        //dd($phoneBooks);
+        if ($request->ajax()) {
+            $query = PhoneBook::withCount(['contacts','client'])->whereclient_id($this->clientID);
 
+            $table = Datatables::of($query);
+
+            $table->editColumn('name', function ($row) {
+                return $row->name ?? 'Not Assigned';
+            });
+            $table->editColumn('contacts', function ($row) {
+                return $row->contacts_count ?? '';
+            });
+            $table->editColumn('client', function ($row) {
+                return $row->client->name ?? '';
+            });
+            $table->editColumn('created_at', function ($row) {
+                return $row->created_at ?? '';
+            });
+            $table->addColumn('actions', '&nbsp;');
+            $table->editColumn('actions', function ($row) {
+                //Set the values to 1 to be viewable on display
+                $view = 1;
+                $edit = 1;
+                $delete = 1;
+                $routePart = 'phonebooks';
+
+                return view('layouts.partials.utilities.datatablesActions', compact(
+                    'view',
+                    'edit',
+                    'delete',
+                    'routePart',
+                    'row'
+                ));
+            });
+
+            $table->rawColumns(['name','contacts', 'client', 'created_at', 'actions']);
+
+            return $table->make(true);
+        }
         return view('phonebooks.index', compact('phoneBooks'));
     }
 
@@ -89,8 +127,24 @@ class PhoneBookController extends Controller
             $table->editColumn('created_at', function ($row) {
                 return $row->created_at ?? '';
             });
+            $table->addColumn('actions', '&nbsp;');
+            $table->editColumn('actions', function ($row) {
+                //Set the values to 1 to be viewable on display
+                $view = 0;
+                $edit = 0;
+                $delete = 1;
+                $routePart = 'contacts';
 
-            $table->rawColumns(['name','phone','created_at']);
+                return view('layouts.partials.utilities.datatablesActions', compact(
+                    'view',
+                    'edit',
+                    'delete',
+                    'routePart',
+                    'row'
+                ));
+            });
+
+            $table->rawColumns(['name','phone','created_at', 'actions']);
 
             return $table->make(true);
         }
